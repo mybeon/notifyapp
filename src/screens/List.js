@@ -96,7 +96,12 @@ const List = ({route, navigation}) => {
           {position?.length > 0 && (
             <TouchableOpacity
               onPress={() => {
-                open({latitude: position[0], longitude: position[1], zoom: 30});
+                open({
+                  latitude: position[0],
+                  longitude: position[1],
+                  zoom: 18,
+                  mapType: 'standard',
+                });
               }}>
               <Goto />
             </TouchableOpacity>
