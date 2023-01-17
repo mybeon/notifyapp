@@ -4,7 +4,6 @@ import {
   FlatList,
   Keyboard,
   TouchableOpacity,
-  Linking,
 } from 'react-native';
 import React, {useRef, useState, useEffect} from 'react';
 import {COLORS} from '../utils/constants';
@@ -93,15 +92,7 @@ const List = ({route, navigation}) => {
           </View>
           {position?.length > 0 && (
             <TouchableOpacity
-              onPress={async () => {
-                console.log('run');
-                /*const url = `http://maps.google.com/maps?q=loc:${position[0]},${position[1]}`;
-                const supported = await Linking.canOpenURL(url);
-                if (supported) {
-                  await Linking.openURL(url);
-                } else {
-                  Alert.alert(`Don't know how to open this URL: ${url}`);
-                }*/
+              onPress={() => {
                 open({latitude: position[0], longitude: position[1]});
               }}>
               <Goto />

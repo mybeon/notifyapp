@@ -8,7 +8,6 @@ import Animated, {
   withSpring,
   withTiming,
   Easing,
-  FadeInRight,
 } from 'react-native-reanimated';
 import Swipeable from 'react-native-gesture-handler/Swipeable';
 
@@ -115,7 +114,7 @@ const Item = ({item, itemDelete, pressedItem}) => {
                 style={[style.lineThrought, lineStyle]}></Animated.View>
             </View>
           </View>
-          {item.number && (
+          {item.number !== '' && (
             <Text style={[style.itemText, {color: COLORS.lightText}]}>
               {item.number} {item.units}
             </Text>

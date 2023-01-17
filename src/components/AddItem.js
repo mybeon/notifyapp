@@ -18,7 +18,7 @@ const AddItem = ({addedItem}) => {
   const [state, setState] = useImmer({
     isModalVisible: false,
     unit: 'kg',
-    unitNumber: undefined,
+    unitNumber: '',
     itemText: '',
   });
 

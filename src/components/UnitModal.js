@@ -4,9 +4,9 @@ import {
   Dimensions,
   TouchableOpacity,
   Pressable,
+  View,
 } from 'react-native';
 import React from 'react';
-import Animated, {FadeInDown} from 'react-native-reanimated';
 import {COLORS, TYPO} from '../utils/constants';
 
 const {height, width} = Dimensions.get('window');
@@ -15,17 +15,17 @@ const UnitModal = props => {
   const units = ['kg', 'g', 'l', 'u', 'm', 'cm'];
   return (
     <Pressable onPress={props.closeModal} style={style.container}>
-      <Animated.View style={style.unitContainer} entering={FadeInDown}>
+      <View style={style.unitContainer}>
         {units.map(item => {
           return (
             <TouchableOpacity
               onPress={props.selectUnit.bind(null, item)}
               key={item}>
-              <Text style={style.unitText}>{item}</Text>
+              <Text style={style.unitText}>{item.toUpperCase()}</Text>
             </TouchableOpacity>
           );
         })}
-      </Animated.View>
+      </View>
     </Pressable>
   );
 };
