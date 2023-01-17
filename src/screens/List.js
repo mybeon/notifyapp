@@ -4,6 +4,7 @@ import {
   FlatList,
   Keyboard,
   TouchableOpacity,
+  ActivityIndicator,
 } from 'react-native';
 import React, {useRef, useState, useEffect} from 'react';
 import {COLORS} from '../utils/constants';
@@ -25,6 +26,7 @@ const List = ({route, navigation}) => {
 
   const flatListRef = useRef(null);
   const [data, setData] = useState([]);
+  const [loading, setLoading] = useState(true);
   const percentWidth = useSharedValue(0);
   const percentStyle = useAnimatedStyle(() => {
     return {
@@ -35,6 +37,7 @@ const List = ({route, navigation}) => {
     (async () => {
       try {
         const items = await AsyncStorage.getItem(`items-${route.params.id}`);
+        setLoading(false);
         if (items) {
           setData(JSON.parse(items));
         }
@@ -93,7 +96,7 @@ const List = ({route, navigation}) => {
           {position?.length > 0 && (
             <TouchableOpacity
               onPress={() => {
-                open({latitude: position[0], longitude: position[1]});
+                open({latitude: position[0], longitude: position[1], zoom: 30});
               }}>
               <Goto />
             </TouchableOpacity>
@@ -116,6 +119,18 @@ const List = ({route, navigation}) => {
     setData(prev => [item, ...prev]);
   }
 
+  if (loading) {
+    return (
+      <View style={{flex: 1, justifyContent: 'center'}}>
+        <ActivityIndicator
+          color={COLORS.mainColor}
+          style={style.loader}
+          size={50}
+        />
+      </View>
+    );
+  }
+
   return (
     <>
       <View style={style.container}>
@@ -127,7 +142,6 @@ const List = ({route, navigation}) => {
           renderItem={renderItem}
           showsVerticalScrollIndicator={false}
           ListFooterComponent={footerComponent}
-          initialNumToRender={18}
           onScrollBeginDrag={() => Keyboard.dismiss()}
         />
       </View>

@@ -20,7 +20,6 @@ import {SwipeListView} from 'react-native-swipe-list-view';
 import {managePermission} from '../functions/requestPermission';
 import {DispatchContext, StateContext} from '../utils/context';
 import {cancelNotification} from '../functions/notification';
-import PushNotification from 'react-native-push-notification';
 
 const {height} = Dimensions.get('window');
 

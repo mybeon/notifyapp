@@ -14,7 +14,12 @@ export function managePermission() {
       } else {
         const requestPermission = await request(
           PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION,
-          {message: 'hey we would like to access your location'},
+          {
+            message:
+              "The app needs access to your location in order to fully take advantage of it's features. No data will be collected or sent to any server. Feel free to decline the request.",
+            buttonNeutral: 'I understand',
+            title: 'Note',
+          },
         );
         if (requestPermission !== 'granted') resolve({status: 'denied'});
         const {latitude, longitude} = await getLocation();

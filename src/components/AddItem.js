@@ -34,7 +34,7 @@ const AddItem = ({addedItem}) => {
       addedItem(newItem);
       setState(draft => {
         draft.itemText = '';
-        draft.unitNumber = undefined;
+        draft.unitNumber = '';
       });
     }
   }
