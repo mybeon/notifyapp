@@ -202,11 +202,15 @@ const AddList = ({navigation, route}) => {
         <Text style={{...TYPO.smallLight}}>Didn't find a location ?</Text>
         <TouchableOpacity
           style={style.goMapBtn}
-          onPress={() =>
-            navigation.navigate('Map', {
-              position: appState.addListData.position,
-            })
-          }
+          onPress={() => {
+            if (appState.addListData.position.length) {
+              navigation.navigate('Map', {
+                position: appState.addListData.position,
+              });
+            } else {
+              navigation.navigate('Map');
+            }
+          }}
           disabled={
             netinfo.isConnected && appState.currentPosition.length
               ? false

@@ -15,9 +15,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
-               BuildableName = "Notifylistapp.app"
-               BlueprintName = "Notifylistapp"
-               ReferencedContainer = "container:Notifylistapp.xcodeproj">
+               BuildableName = "Notify.app"
+               BlueprintName = "Notify"
+               ReferencedContainer = "container:Notify.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -33,9 +33,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "00E356ED1AD99517003FC87E"
-               BuildableName = "NotifylistappTests.xctest"
-               BlueprintName = "NotifylistappTests"
-               ReferencedContainer = "container:Notifylistapp.xcodeproj">
+               BuildableName = "NotifyTests.xctest"
+               BlueprintName = "NotifyTests"
+               ReferencedContainer = "container:Notify.xcodeproj">
             </BuildableReference>
          </TestableReference>
       </Testables>
@@ -55,9 +55,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
-            BuildableName = "Notifylistapp.app"
-            BlueprintName = "Notifylistapp"
-            ReferencedContainer = "container:Notifylistapp.xcodeproj">
+            BuildableName = "Notify.app"
+            BlueprintName = "Notify"
+            ReferencedContainer = "container:Notify.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </LaunchAction>
@@ -72,9 +72,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
-            BuildableName = "Notifylistapp.app"
-            BlueprintName = "Notifylistapp"
-            ReferencedContainer = "container:Notifylistapp.xcodeproj">
+            BuildableName = "Notify.app"
+            BlueprintName = "Notify"
+            ReferencedContainer = "container:Notify.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>

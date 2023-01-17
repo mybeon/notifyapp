@@ -147,6 +147,7 @@ const List = ({route, navigation}) => {
           renderItem={renderItem}
           showsVerticalScrollIndicator={false}
           ListFooterComponent={footerComponent}
+          initialNumToRender={12}
           onScrollBeginDrag={() => Keyboard.dismiss()}
         />
       </View>
