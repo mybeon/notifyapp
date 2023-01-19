@@ -48,7 +48,7 @@ const List = ({route, navigation}) => {
   }, []);
 
   useEffect(() => {
-    if (!data.length) return;
+    if (loading) return;
     const itemsCount = data.length;
     const checkItems = data.filter(item => item.checked === true).length;
     const percent = Math.floor((checkItems / itemsCount) * 100);
