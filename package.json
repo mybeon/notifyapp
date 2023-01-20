@@ -8,7 +8,7 @@
     "start": "react-native start",
     "test": "jest",
     "lint": "eslint .",
-    "postversion": "react-native-version"
+    "postversion": "react-native-version -A"
   },
   "dependencies": {
     "@react-native-async-storage/async-storage": "^1.15.16",
