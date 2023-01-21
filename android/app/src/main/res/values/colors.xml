@@ -4,5 +4,5 @@
     <item>@color/blue</item>
     </integer-array>
     <color name="primary_dark">#000000</color>
-    <color name="white">#FFF</color>
+    <color name="white">#ABBFF5</color>
 </resources>

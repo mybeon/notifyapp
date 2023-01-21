@@ -220,6 +220,7 @@ const AddList = ({navigation}) => {
         }}
         minuteInterval={1}
         minimumDate={new Date()}
+        theme="light"
       />
       <TouchableOpacity
         style={style.dateContainer}

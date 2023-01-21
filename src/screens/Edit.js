@@ -77,7 +77,7 @@ const AddList = ({navigation, route}) => {
       });
 
       await AsyncStorage.setItem('lists', JSON.stringify(newArr));
-      if (updateList.date) {
+      if (updateList.date && new Date(updateList.date) > Date.now()) {
         cancelNotification(route.params.notificationId);
         scheduleNotification(
           appState.addListData.date,
@@ -232,6 +232,7 @@ const AddList = ({navigation, route}) => {
         }}
         minuteInterval={1}
         minimumDate={new Date()}
+        theme="light"
       />
       <TouchableOpacity
         style={style.dateContainer}
