@@ -10,10 +10,47 @@ import {StateContext} from '../utils/context';
 import trimText from '../functions/trimText';
 import getDate from '../functions/getDate';
 
-const List = ({name, location, index, id, navigation, position, date}) => {
+const List = ({
+  name,
+  location,
+  index,
+  id,
+  navigation,
+  position,
+  date,
+  listLength,
+}) => {
   const appContext = useContext(StateContext);
   const userPosition = appContext.currentPosition;
-  const border = index ? 0 : 5;
+  const border = idx => {
+    if (idx === 0) {
+      if (listLength === 1) {
+        return {
+          borderRadius: 5,
+        };
+      }
+      return {
+        elevation: 40,
+        borderTopLeftRadius: 5,
+        borderTopRightRadius: 5,
+        borderBottomRightRadius: 0,
+        borderBottomLeftRadius: 0,
+      };
+    } else if (idx === listLength - 1) {
+      return {
+        elevation: 40,
+        borderTopLeftRadius: 0,
+        borderTopRightRadius: 0,
+        borderBottomRightRadius: 5,
+        borderBottomLeftRadius: 5,
+      };
+    } else {
+      return {
+        elevation: 40,
+        border: 0,
+      };
+    }
+  };
   function listPressed() {
     navigation.navigate('List', {name, id, position, location});
   }
@@ -28,14 +65,7 @@ const List = ({name, location, index, id, navigation, position, date}) => {
     <Pressable
       android_ripple={{color: '#dddddd'}}
       onPress={listPressed}
-      style={[
-        style.mainContainer,
-        {
-          elevation: index ? 40 : 0,
-          borderTopLeftRadius: border,
-          borderTopRightRadius: border,
-        },
-      ]}>
+      style={[style.mainContainer, border(index)]}>
       <View
         style={{
           alignSelf: 'flex-start',
@@ -94,6 +124,7 @@ const List = ({name, location, index, id, navigation, position, date}) => {
 
 const style = StyleSheet.create({
   mainContainer: {
+    marginTop: -1,
     height: 85,
     backgroundColor: COLORS.lightColor,
     flexDirection: 'row',
@@ -105,7 +136,6 @@ const style = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     marginRight: 12,
-    //backgroundColor: 'red',
     justifyContent: 'space-between',
   },
 });

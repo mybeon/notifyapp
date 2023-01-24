@@ -111,7 +111,7 @@ const Item = ({item, itemDelete, pressedItem}) => {
                 {item.label}
               </Animated.Text>
               <Animated.View
-                style={[style.lineThrought, lineStyle]}></Animated.View>
+                style={[style.lineThrough, lineStyle]}></Animated.View>
             </View>
           </View>
           {item.number !== '' && (
@@ -149,7 +149,7 @@ const style = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
   },
-  lineThrought: {
+  lineThrough: {
     position: 'absolute',
     height: 2,
     backgroundColor: COLORS.lightText,

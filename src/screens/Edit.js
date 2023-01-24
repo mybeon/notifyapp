@@ -231,7 +231,7 @@ const AddList = ({navigation, route}) => {
           setOpenDate(false);
         }}
         minuteInterval={1}
-        minimumDate={new Date()}
+        minimumDate={new Date(Date.now() + 3000 * 60)}
         theme="light"
       />
       <TouchableOpacity

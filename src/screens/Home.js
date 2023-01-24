@@ -10,7 +10,6 @@ import {
 } from 'react-native';
 import {FONTS, COLORS} from '../utils/constants';
 import TopIcon from '../../assets/svg/mainIcon.svg';
-import AddListSvg from '../../assets/svg/addList.svg';
 import EditSvg from '../../assets/svg/edit.svg';
 import Trash from '../../assets/svg/trash.svg';
 import List from '../components/List';
@@ -20,6 +19,7 @@ import {SwipeListView} from 'react-native-swipe-list-view';
 import {managePermission} from '../functions/requestPermission';
 import {DispatchContext, StateContext} from '../utils/context';
 import {cancelNotification} from '../functions/notification';
+import AddListBtn from '../components/AddListBtn';
 
 const {height} = Dimensions.get('window');
 
@@ -64,16 +64,13 @@ const Home = ({navigation}) => {
         name={item.name}
         location={item.locationName}
         index={index}
+        listLength={appState.lists.length}
         id={item.id}
         navigation={navigation}
         position={item.position}
         date={item.date}
       />
     );
-  };
-
-  const headerComponent = () => {
-    return <View style={{height: 20}}></View>;
   };
 
   function deleteList(item) {
@@ -138,9 +135,7 @@ const Home = ({navigation}) => {
     return (
       <View style={style.mainLists}>
         <SwipeListView
-          style={{borderRadius: 5, overflow: 'hidden'}}
           showsVerticalScrollIndicator={false}
-          ListHeaderComponent={headerComponent}
           data={appState.lists}
           alwaysBounceVertical={false}
           renderItem={renderItem}
@@ -164,14 +159,7 @@ const Home = ({navigation}) => {
             <Text style={style.upperText}>Lists</Text>
           </View>
         </View>
-        <TouchableOpacity
-          onPress={() => {
-            navigation.navigate('AddList');
-          }}
-          activeOpacity={0.7}
-          style={style.addListContainer}>
-          <AddListSvg />
-        </TouchableOpacity>
+        <AddListBtn navigation={navigation} />
         <MainContent />
       </View>
     </>
@@ -183,11 +171,13 @@ const style = StyleSheet.create({
     backgroundColor: COLORS.mainColor,
     height,
     paddingHorizontal: 18,
-    paddingVertical: 22,
+    paddingTop: 22,
+    paddingBottom: 42,
   },
   upperSection: {
     flexDirection: 'row',
     justifyContent: 'space-between',
+    marginBottom: 20,
   },
   upperText: {
     fontFamily: FONTS.medium,
@@ -196,24 +186,10 @@ const style = StyleSheet.create({
     marginLeft: 4,
     color: 'white',
   },
-  addListContainer: {
-    height: 70,
-    width: 70,
-    borderRadius: 70,
-    backgroundColor: COLORS.mainColor,
-    justifyContent: 'center',
-    alignItems: 'center',
-    position: 'absolute',
-    bottom: 50,
-    right: 18,
-    zIndex: 10,
-    elevation: 10,
-  },
   mainLists: {
-    height: height * 0.8,
+    flex: 1,
     borderRadius: 5,
     overflow: 'hidden',
-    marginTop: 6,
   },
   loader: {
     position: 'absolute',
