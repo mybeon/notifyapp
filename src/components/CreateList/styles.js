@@ -1,5 +1,5 @@
 import {StyleSheet, Dimensions} from 'react-native';
-import {COLORS, FONTS} from '../../utils/constants';
+import {COLORS, FONTS, TYPO} from '../../utils/constants';
 
 const {width, height} = Dimensions.get('window');
 
@@ -73,6 +73,18 @@ const style = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     borderRadius: 5,
+  },
+  sharedContainer: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    marginTop: 30,
+  },
+  sharedText: {
+    fontFamily: FONTS.bold,
+    fontSize: 18,
+    color: COLORS.mainText,
+    textTransform: 'capitalize',
+    marginRight: 10,
   },
 });
 

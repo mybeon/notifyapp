@@ -5,9 +5,10 @@ import {
   TouchableOpacity,
   ScrollView,
   Pressable,
+  Switch,
 } from 'react-native';
 import style from './styles';
-import {TYPO} from '../../utils/constants';
+import {COLORS, TYPO} from '../../utils/constants';
 import CloseSvg from '../../../assets/svg/close.svg';
 import Calendar from '../../../assets/svg/calendar-1.svg';
 import Field from '../../components/Field';
@@ -41,6 +42,7 @@ const CreateList = ({navigation, route, type}) => {
   const [loading, setLoading] = useState(false);
   const [createDisable, setCreateDisable] = useState(false);
   const [openDate, setOpenDate] = useState(false);
+  const [shared, setShared] = useState(false);
   const closeModal = () => {
     navigation.goBack();
     appDispatch({type: 'clearList'});
@@ -70,6 +72,7 @@ const CreateList = ({navigation, route, type}) => {
         notificationId: appState.addListData.date
           ? Math.floor(Math.random() * Math.pow(2, 32)).toString()
           : null,
+        shared,
       };
       try {
         if (type === 'create') {
@@ -173,7 +176,6 @@ const CreateList = ({navigation, route, type}) => {
         onPress={closeModal}>
         <CloseSvg />
       </TouchableOpacity>
-
       <View style={style.formContainer}>
         <Field
           label="Name"
@@ -255,12 +257,13 @@ const CreateList = ({navigation, route, type}) => {
         onCancel={() => {
           setOpenDate(false);
         }}
-        minuteInterval={1}
-        minimumDate={new Date(Date.now() + 3000 * 60)}
+        minuteInterval={10}
+        minimumDate={new Date()}
         theme="light"
       />
       <TouchableOpacity
-        style={style.dateContainer}
+        disabled={shared}
+        style={[style.dateContainer, {opacity: shared ? 0.3 : 1}]}
         activeOpacity={0.5}
         onPress={() => {
           setOpenDate(true);
@@ -272,6 +275,15 @@ const CreateList = ({navigation, route, type}) => {
         </Text>
         <Calendar />
       </TouchableOpacity>
+      <View style={style.sharedContainer}>
+        <Text style={style.sharedText}>shared</Text>
+        <Switch
+          trackColor={{true: COLORS.mainColor}}
+          thumbColor={COLORS.lightColor}
+          value={shared}
+          onValueChange={() => setShared(prev => !prev)}
+        />
+      </View>
       <TouchableOpacity
         disabled={createDisable}
         onPress={createList}
