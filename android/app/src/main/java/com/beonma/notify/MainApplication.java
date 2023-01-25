@@ -16,6 +16,8 @@ import com.swmansion.reanimated.ReanimatedJSIModulePackage;
 import com.airbnb.android.react.lottie.LottiePackage;
 import com.dieam.reactnativepushnotification.ReactNativePushNotificationPackage;
 import com.lugg.ReactNativeConfig.ReactNativeConfigPackage;
+import io.invertase.firebase.app.ReactNativeFirebaseAppPackage;
+import io.invertase.firebase.firestore.ReactNativeFirebaseFirestorePackage;
 
 
 public class MainApplication extends Application implements ReactApplication {
