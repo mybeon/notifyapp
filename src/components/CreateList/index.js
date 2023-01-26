@@ -12,7 +12,7 @@ import {COLORS, TYPO} from '../../utils/constants';
 import CloseSvg from '../../../assets/svg/close.svg';
 import Calendar from '../../../assets/svg/calendar-1.svg';
 import Field from '../../components/Field';
-import {StateContext, DispatchContext} from '../../utils/context';
+import {AppContext} from '../../utils/context';
 import axios from 'axios';
 import SearchItem from '../../components/SearchItem';
 import Loader from '../../components/Loader';
@@ -29,14 +29,12 @@ import config from 'react-native-config';
 
 const CreateList = ({navigation, route, type}) => {
   const netinfo = useNetInfo();
-  const appState = useContext(StateContext);
-  const appDispatch = useContext(DispatchContext);
-  const opacity =
-    netinfo.isConnected && appState.currentPosition.length ? 1 : 0.3;
+  const {state, dispatch} = useContext(AppContext);
+  const opacity = netinfo.isConnected && state.currentPosition.length ? 1 : 0.3;
   const datePickerValue =
     type === 'create'
-      ? appState.addListData.date
-      : new Date(appState.addListData.date);
+      ? state.addListData.date
+      : new Date(state.addListData.date);
   const [searchData, setSearchData] = useState([]);
   const [searchOverlay, setSearchOverlay] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -45,31 +43,31 @@ const CreateList = ({navigation, route, type}) => {
   const [shared, setShared] = useState(false);
   const closeModal = () => {
     navigation.goBack();
-    appDispatch({type: 'clearList'});
+    dispatch({type: 'clearList'});
   };
   useEffect(() => {
     if (type === 'edit') {
-      appDispatch({type: 'nameChange', value: route.params.name});
-      appDispatch({
+      dispatch({type: 'nameChange', value: route.params.name});
+      dispatch({
         type: 'locationChange',
         value: route.params.locationName,
         search: true,
       });
-      appDispatch({type: 'setListPosition', value: route.params.position});
-      appDispatch({type: 'dateChange', value: route.params.date});
+      dispatch({type: 'setListPosition', value: route.params.position});
+      dispatch({type: 'dateChange', value: route.params.date});
     }
   }, []);
   const createList = async () => {
-    if (appState.addListData.name.trim() !== '') {
+    if (state.addListData.name.trim() !== '') {
       setCreateDisable(true);
       const newList = {
-        name: appState.addListData.name,
-        locationName: appState.addListData.location,
-        position: appState.addListData.position,
-        date: appState.addListData.date
-          ? new Date(appState.addListData.date).toString()
+        name: state.addListData.name,
+        locationName: state.addListData.location,
+        position: state.addListData.position,
+        date: state.addListData.date
+          ? new Date(state.addListData.date).toString()
           : null,
-        notificationId: appState.addListData.date
+        notificationId: state.addListData.date
           ? Math.floor(Math.random() * Math.pow(2, 32)).toString()
           : null,
         shared,
@@ -87,10 +85,10 @@ const CreateList = ({navigation, route, type}) => {
               JSON.stringify([newList, ...lists]),
             );
           }
-          appDispatch({type: 'updateLists', data: newList});
+          dispatch({type: 'updateLists', data: newList});
           if (newList.date) {
             scheduleNotification(
-              appState.addListData.date,
+              state.addListData.date,
               newList.notificationId,
               newList.name,
             );
@@ -113,25 +111,25 @@ const CreateList = ({navigation, route, type}) => {
           if (newList.date && new Date(newList.date) > Date.now()) {
             cancelNotification(route.params.notificationId);
             scheduleNotification(
-              appState.addListData.date,
+              state.addListData.date,
               newList.notificationId,
               newList.name,
             );
           }
-          appDispatch({type: 'setLists', data: newArr});
+          dispatch({type: 'setLists', data: newArr});
           navigation.navigate('Home');
         }
       } catch (e) {
         console.log('create list error', e);
       }
-      appDispatch({type: 'clearList'});
+      dispatch({type: 'clearList'});
     }
   };
 
   useEffect(() => {
     if (
-      appState.addListData.location.trim() === '' ||
-      appState.addListData.fromSearch
+      state.addListData.location.trim() === '' ||
+      state.addListData.fromSearch
     ) {
       setSearchOverlay(false);
       setLoading(false);
@@ -144,7 +142,7 @@ const CreateList = ({navigation, route, type}) => {
     const sendRequest = setTimeout(() => {
       axios
         .get(
-          `https://places.ls.hereapi.com/places/v1/autosuggest?at=31.652366,-8.078394&q=${appState.addListData.location}&apiKey=${config.GEO_API}`,
+          `https://places.ls.hereapi.com/places/v1/autosuggest?at=31.652366,-8.078394&q=${state.addListData.location}&apiKey=${config.GEO_API}`,
           {cancelToken: request.token},
         )
         .then(res => {
@@ -158,11 +156,11 @@ const CreateList = ({navigation, route, type}) => {
       request.cancel();
       clearTimeout(sendRequest);
     };
-  }, [appState.addListData.location]);
+  }, [state.addListData.location]);
 
   function searchItemPressed(item) {
-    appDispatch({type: 'locationChange', value: item.title, search: true});
-    appDispatch({type: 'setListPosition', value: item.position});
+    dispatch({type: 'locationChange', value: item.title, search: true});
+    dispatch({type: 'setListPosition', value: item.position});
     setSearchOverlay(false);
     setLoading(false);
     setSearchData([]);
@@ -180,25 +178,23 @@ const CreateList = ({navigation, route, type}) => {
         <Field
           label="Name"
           placeholder="List Name"
-          value={appState.addListData.name}
-          dispatch={'nameChange'}
+          value={state.addListData.name}
+          dispatchType={'nameChange'}
         />
         <View style={{opacity}}>
           <Field
             label="Location"
             placeholder="Choose location"
             margin={true}
-            value={appState.addListData.location}
-            dispatch={'locationChange'}
+            value={state.addListData.location}
+            dispatchType={'locationChange'}
             edit={
-              netinfo.isConnected && appState.currentPosition.length
-                ? true
-                : false
+              netinfo.isConnected && state.currentPosition.length ? true : false
             }
           />
           <Pressable
             style={style.emptySearch}
-            onPress={() => appDispatch({type: 'locationChange', value: ''})}>
+            onPress={() => dispatch({type: 'locationChange', value: ''})}>
             <CloseSvg />
           </Pressable>
         </View>
@@ -237,9 +233,7 @@ const CreateList = ({navigation, route, type}) => {
         <Text style={{...TYPO.smallLight}}>Didn't find a location ?</Text>
         <TouchableOpacity
           disabled={
-            netinfo.isConnected && appState.currentPosition.length
-              ? false
-              : true
+            netinfo.isConnected && state.currentPosition.length ? false : true
           }
           style={style.goMapBtn}
           onPress={() => navigation.push('Map')}>
@@ -251,7 +245,7 @@ const CreateList = ({navigation, route, type}) => {
         open={openDate}
         date={datePickerValue || new Date()}
         onConfirm={date => {
-          appDispatch({type: 'dateChange', value: date});
+          dispatch({type: 'dateChange', value: date});
           setOpenDate(false);
         }}
         onCancel={() => {
@@ -269,8 +263,8 @@ const CreateList = ({navigation, route, type}) => {
           setOpenDate(true);
         }}>
         <Text style={{...TYPO.smallLight}}>
-          {appState.addListData.date
-            ? getDate(appState.addListData.date)
+          {state.addListData.date
+            ? getDate(state.addListData.date)
             : 'Select due date'}
         </Text>
         <Calendar />

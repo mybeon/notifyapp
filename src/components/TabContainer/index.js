@@ -8,16 +8,15 @@ import Animated, {
 } from 'react-native-reanimated';
 import styles from './styles';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {DispatchContext, StateContext} from '../../utils/context';
+import {AppContext} from '../../utils/context';
 import LocalList from './LocalList';
 import SharedList from './SharedList';
 import listCount from '../../functions/listCount';
 
 const index = props => {
-  const appDispatch = useContext(DispatchContext);
-  const appState = useContext(StateContext);
-  const localListCount = listCount(appState.lists);
-  const sharedListCount = listCount(appState.lists, false);
+  const {state, dispatch} = useContext(AppContext);
+  const localListCount = listCount(state.lists);
+  const sharedListCount = listCount(state.lists, false);
   const [tab, setTab] = useState('local');
   const activeMargin = useSharedValue('0%');
   const localText = useSharedValue(COLORS.lightColor);
@@ -54,12 +53,12 @@ const index = props => {
         if (res) {
           const data = JSON.parse(res);
           if (data.length) {
-            appDispatch({type: 'setLists', data});
+            dispatch({type: 'setLists', data});
           } else {
-            appDispatch({type: 'setLists', data: []});
+            dispatch({type: 'setLists', data: []});
           }
         } else {
-          appDispatch({type: 'setLists', data: []});
+          dispatch({type: 'setLists', data: []});
         }
       })
       .catch(e => console.log(e));
@@ -81,9 +80,9 @@ const index = props => {
         <Animated.View style={[styles.active, animateActive]} />
       </View>
       {tab === 'local' ? (
-        <LocalList data={appState.lists} navigation={props.navigation} />
+        <LocalList data={state.lists} navigation={props.navigation} />
       ) : (
-        <SharedList data={appState.lists} navigation={props.navigation} />
+        <SharedList data={state.lists} navigation={props.navigation} />
       )}
     </View>
   );

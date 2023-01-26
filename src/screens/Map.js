@@ -7,7 +7,7 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import MapView, {PROVIDER_GOOGLE, Marker} from 'react-native-maps';
-import {StateContext, DispatchContext} from '../utils/context';
+import {AppContext} from '../utils/context';
 import BackBtn from '../../assets/svg/back-map.svg';
 import SaveMap from '../../assets/svg/save-map.svg';
 import {COLORS, TYPO} from '../utils/constants';
@@ -17,8 +17,10 @@ import config from 'react-native-config';
 
 const {height, width} = Dimensions.get('window');
 const Map = ({navigation, route}) => {
-  const {currentPosition} = useContext(StateContext);
-  const appDispatch = useContext(DispatchContext);
+  const {
+    state: {currentPosition},
+    dispatch,
+  } = useContext(AppContext);
   const [markerPosition, setMarkerPosition] = useState(undefined);
   const [disableBtn, setDisableBtn] = useState(false);
   function onMapPress(e) {
@@ -44,8 +46,8 @@ const Map = ({navigation, route}) => {
           `https://revgeocode.search.hereapi.com/v1/revgeocode?at=${latitude}%2C${longitude}&lang=fr-FR&apiKey=${config.GEO_API}`,
         )
         .then(res => {
-          appDispatch({type: 'setListPosition', value: [latitude, longitude]});
-          appDispatch({
+          dispatch({type: 'setListPosition', value: [latitude, longitude]});
+          dispatch({
             type: 'locationChange',
             value: res.data.items[0].title,
             search: true,

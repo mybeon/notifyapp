@@ -4,13 +4,13 @@ import React, {useContext} from 'react';
 import EditSvg from '../../../assets/svg/edit.svg';
 import Trash from '../../../assets/svg/trash.svg';
 import List from '../../components/List';
-import {StateContext, DispatchContext} from '../../utils/context';
+import {AppContext} from '../../utils/context';
 import {SwipeListView} from 'react-native-swipe-list-view';
 import {COLORS} from '../../utils/constants';
+import Empty from '../Empty';
 
 const SwipeList = props => {
-  const appDispatch = useContext(DispatchContext);
-  const appState = useContext(StateContext);
+  const {state, dispatch} = useContext(AppContext);
   const renderItem = ({item, index}) => {
     return (
       <List
@@ -34,7 +34,7 @@ const SwipeList = props => {
         text: 'YES',
         onPress: async () => {
           try {
-            const newArr = appState.lists.filter(
+            const newArr = state.lists.filter(
               itemFilter => itemFilter.id !== item.id,
             );
             await AsyncStorage.removeItem(`items-${item.id}`);
@@ -42,7 +42,7 @@ const SwipeList = props => {
             if (item.date) {
               cancelNotification(item.notificationId);
             }
-            appDispatch({type: 'setLists', data: newArr});
+            dispatch({type: 'setLists', data: newArr});
           } catch (e) {
             console.log(e);
           }

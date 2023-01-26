@@ -1,10 +1,10 @@
 import React, {useContext} from 'react';
 import {View, Text, TextInput, StyleSheet} from 'react-native';
 import {FONTS, COLORS} from '../utils/constants';
-import {DispatchContext} from '../utils/context';
+import {AppContext} from '../utils/context';
 
-const Field = ({label, placeholder, margin, value, dispatch, edit}) => {
-  const appDispatch = useContext(DispatchContext);
+const Field = ({label, placeholder, margin, value, dispatchType, edit}) => {
+  const {dispatch} = useContext(AppContext);
   const fieldMargin = margin ? 30 : 0;
   return (
     <View style={{marginTop: fieldMargin}}>
@@ -14,7 +14,7 @@ const Field = ({label, placeholder, margin, value, dispatch, edit}) => {
         style={[style.input, !value ? style.placeholder : {}]}
         placeholder={placeholder}
         placeholderTextColor={COLORS.lightText}
-        onChangeText={value => appDispatch({type: dispatch, value})}
+        onChangeText={value => dispatch({type: dispatchType, value})}
         editable={edit}
       />
     </View>

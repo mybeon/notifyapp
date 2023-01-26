@@ -6,7 +6,7 @@ import Location from '../../assets/svg/location.svg';
 import Direction from '../../assets/svg/direction.svg';
 import Calendar from '../../assets/svg/calendar.svg';
 import {getDistance} from 'geolib';
-import {StateContext} from '../utils/context';
+import {AppContext} from '../utils/context';
 import trimText from '../functions/trimText';
 import getDate from '../functions/getDate';
 
@@ -20,8 +20,8 @@ const List = ({
   date,
   listLength,
 }) => {
-  const appContext = useContext(StateContext);
-  const userPosition = appContext.currentPosition;
+  const {state} = useContext(AppContext);
+  const userPosition = state.currentPosition;
   const border = idx => {
     if (idx === 0) {
       if (listLength === 1) {

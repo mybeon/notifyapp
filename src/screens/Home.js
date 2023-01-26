@@ -3,20 +3,19 @@ import {View, Text, Dimensions, StyleSheet} from 'react-native';
 import {FONTS, COLORS} from '../utils/constants';
 import TopIcon from '../../assets/svg/mainIcon.svg';
 import {managePermission} from '../functions/requestPermission';
-import {DispatchContext} from '../utils/context';
+import {AppContext} from '../utils/context';
 import AddListBtn from '../components/AddListBtn';
 import TabContainer from '../components/TabContainer';
 
 const {height} = Dimensions.get('window');
 
 const Home = ({navigation}) => {
-  const appDispatch = useContext(DispatchContext);
-
+  const {dispatch} = useContext(AppContext);
   useEffect(() => {
     managePermission()
       .then(res => {
         if (res.status !== 'granted') return;
-        appDispatch({
+        dispatch({
           type: 'currentPosition',
           value: [res.latitude, res.longitude],
         });
@@ -27,18 +26,16 @@ const Home = ({navigation}) => {
   }, []);
 
   return (
-    <>
-      <View style={style.container}>
-        <View style={style.upperSection}>
-          <View style={{flexDirection: 'row', alignItems: 'center'}}>
-            <TopIcon />
-            <Text style={style.upperText}>Lists</Text>
-          </View>
+    <View style={style.container}>
+      <View style={style.upperSection}>
+        <View style={{flexDirection: 'row', alignItems: 'center'}}>
+          <TopIcon />
+          <Text style={style.upperText}>Lists</Text>
         </View>
-        <TabContainer navigation={navigation} />
-        <AddListBtn navigation={navigation} />
       </View>
-    </>
+      <TabContainer navigation={navigation} />
+      <AddListBtn navigation={navigation} />
+    </View>
   );
 };
 
