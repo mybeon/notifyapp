@@ -5,6 +5,7 @@ import Animated, {
   useSharedValue,
   useAnimatedStyle,
   withTiming,
+  Easing,
 } from 'react-native-reanimated';
 import styles from './styles';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -21,6 +22,12 @@ const index = props => {
   const activeMargin = useSharedValue('0%');
   const localText = useSharedValue(COLORS.lightColor);
   const sharedText = useSharedValue(COLORS.mainText);
+  const timing = val => {
+    return withTiming(val, {
+      duration: 400,
+      easing: Easing.bezier(0, 0.52, 0.5, 1),
+    });
+  };
   const animateActive = useAnimatedStyle(() => {
     return {
       marginLeft: activeMargin.value,
@@ -37,11 +44,11 @@ const index = props => {
     };
   });
   function handleTabPressed(type) {
-    activeMargin.value = withTiming(type === 'local' ? '0%' : '50%');
-    localText.value = withTiming(
+    activeMargin.value = timing(type === 'local' ? '0%' : '50%');
+    localText.value = timing(
       type === 'local' ? COLORS.lightColor : COLORS.mainText,
     );
-    sharedText.value = withTiming(
+    sharedText.value = timing(
       type === 'local' ? COLORS.mainText : COLORS.lightColor,
     );
     setTab(type);

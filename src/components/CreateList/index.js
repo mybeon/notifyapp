@@ -75,6 +75,20 @@ const CreateList = ({navigation, route, type}) => {
       try {
         if (type === 'create') {
           newList.id = uuid.v4();
+          if (shared) {
+            newList.date = null;
+            newList.adminKey = uuid.v4();
+            newList.shareKey = uuid.v4();
+            newList.createdAt = new Date().toString();
+            await axios.post(
+              'http://10.0.2.2:5001/notify-grocery-list/us-central1/lists',
+              newList,
+            );
+            dispatch({type: 'updateSharedLists', data: newList});
+            delete newList.date;
+            delete newList.locationName;
+            delete newList.notificationId;
+          }
           let lists = await AsyncStorage.getItem('lists');
           if (!lists) {
             await AsyncStorage.setItem('lists', JSON.stringify([newList]));
@@ -97,6 +111,7 @@ const CreateList = ({navigation, route, type}) => {
             id: newList.id,
             name: newList.name,
             position: newList.position,
+            shared,
           });
         } else {
           const lists = await AsyncStorage.getItem('lists');
@@ -269,15 +284,18 @@ const CreateList = ({navigation, route, type}) => {
         </Text>
         <Calendar />
       </TouchableOpacity>
-      <View style={style.sharedContainer}>
-        <Text style={style.sharedText}>shared</Text>
-        <Switch
-          trackColor={{true: COLORS.mainColor}}
-          thumbColor={COLORS.lightColor}
-          value={shared}
-          onValueChange={() => setShared(prev => !prev)}
-        />
-      </View>
+      {type === 'create' && (
+        <View style={style.sharedContainer}>
+          <Text style={style.sharedText}>shared</Text>
+          <Switch
+            disabled={!netinfo.isConnected}
+            trackColor={{true: COLORS.mainColor}}
+            thumbColor={COLORS.lightColor}
+            value={shared}
+            onValueChange={() => setShared(prev => !prev)}
+          />
+        </View>
+      )}
       <TouchableOpacity
         disabled={createDisable}
         onPress={createList}

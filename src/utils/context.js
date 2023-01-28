@@ -6,6 +6,7 @@ export const AppContext = createContext();
 
 const initialState = {
   lists: null,
+  sharedLists: null,
   addListData: {
     name: '',
     location: '',
@@ -23,6 +24,16 @@ function ourReducer(draft, action) {
       break;
     case 'updateLists':
       draft.lists = [action.data, ...draft.lists];
+      break;
+    case 'setSharedLists':
+      draft.sharedLists = action.data;
+      break;
+    case 'updateSharedLists':
+      if (draft.sharedLists !== null) {
+        draft.sharedLists = [action.data, ...draft.sharedLists];
+      } else {
+        draft.sharedLists = [action.data];
+      }
       break;
     case 'dateChange':
       draft.addListData.date = action.value;

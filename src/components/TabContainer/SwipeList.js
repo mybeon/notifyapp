@@ -8,9 +8,12 @@ import {AppContext} from '../../utils/context';
 import {SwipeListView} from 'react-native-swipe-list-view';
 import {COLORS} from '../../utils/constants';
 import Empty from '../Empty';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const SwipeList = props => {
   const {state, dispatch} = useContext(AppContext);
+  const rightSwipe = props.refreshControl ? -60 : -120;
+  const rightSwipeStop = props.refreshControl ? -80 : -140;
   const renderItem = ({item, index}) => {
     return (
       <List
@@ -22,6 +25,7 @@ const SwipeList = props => {
         navigation={props.navigation}
         position={item.position}
         date={item.date}
+        shared={item.shared}
       />
     );
   };
@@ -37,8 +41,11 @@ const SwipeList = props => {
             const newArr = state.lists.filter(
               itemFilter => itemFilter.id !== item.id,
             );
-            await AsyncStorage.removeItem(`items-${item.id}`);
-            await AsyncStorage.setItem('lists', JSON.stringify(newArr));
+            await Promise.all([
+              AsyncStorage.removeItem(`items-${item.id}`),
+              AsyncStorage.setItem('lists', JSON.stringify(newArr)),
+              props.deleteShared(item),
+            ]);
             if (item.date) {
               cancelNotification(item.notificationId);
             }
@@ -58,14 +65,16 @@ const SwipeList = props => {
   function hiddenItem({item}) {
     return (
       <View style={styles.hiddenItemContainer}>
-        <TouchableOpacity
-          onPress={() => editList(item)}
-          style={[
-            styles.hiddenIcon,
-            {backgroundColor: COLORS.accentColor, borderRadius: 5},
-          ]}>
-          <EditSvg />
-        </TouchableOpacity>
+        {!props.refreshControl && (
+          <TouchableOpacity
+            onPress={() => editList(item)}
+            style={[
+              styles.hiddenIcon,
+              {backgroundColor: COLORS.accentColor, borderRadius: 5},
+            ]}>
+            <EditSvg />
+          </TouchableOpacity>
+        )}
         <TouchableOpacity
           onPress={() => deleteList(item)}
           style={[styles.hiddenIcon, {backgroundColor: COLORS.danger}]}>
@@ -87,13 +96,14 @@ const SwipeList = props => {
   return (
     <View style={styles.mainLists}>
       <SwipeListView
+        refreshControl={props.refreshControl}
         showsVerticalScrollIndicator={false}
         data={props.data}
         alwaysBounceVertical={false}
         renderItem={renderItem}
         disableRightSwipe={true}
-        rightOpenValue={-120}
-        stopRightSwipe={-140}
+        rightOpenValue={rightSwipe}
+        stopRightSwipe={rightSwipeStop}
         renderHiddenItem={hiddenItem}
         closeOnRowBeginSwipe={true}
         keyExtractor={item => item.id}

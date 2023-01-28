@@ -19,6 +19,7 @@ const List = ({
   position,
   date,
   listLength,
+  shared,
 }) => {
   const {state} = useContext(AppContext);
   const userPosition = state.currentPosition;
@@ -52,7 +53,7 @@ const List = ({
     }
   };
   function listPressed() {
-    navigation.navigate('List', {name, id, position, location});
+    navigation.navigate('List', {name, id, position, location, shared});
   }
   const distance =
     position.length > 0 && userPosition.length > 0

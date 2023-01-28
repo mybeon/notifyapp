@@ -6,7 +6,7 @@ import {
   TouchableOpacity,
   ActivityIndicator,
 } from 'react-native';
-import React, {useRef, useState, useEffect} from 'react';
+import React, {useRef, useEffect, useContext} from 'react';
 import {COLORS} from '../utils/constants';
 import Header from '../components/Header';
 import Item from '../components/Item';
@@ -17,35 +17,30 @@ import Animated, {
   Easing,
   withTiming,
 } from 'react-native-reanimated';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import Goto from '../../assets/svg/goto.svg';
 import open from 'react-native-open-maps';
+import {addItem, updateItem} from '../functions/items';
+import useGetItems from '../hooks/useGetItems';
+import {AppContext} from '../utils/context';
 
 const List = ({route, navigation}) => {
+  const {state} = useContext(AppContext);
+  const shareKey = state.lists.find(el => el.id === route.params.id).shareKey;
   const position = route.params.position;
-
+  const shared = route.params.shared;
   const flatListRef = useRef(null);
-  const [data, setData] = useState([]);
-  const [loading, setLoading] = useState(true);
   const percentWidth = useSharedValue(0);
   const percentStyle = useAnimatedStyle(() => {
     return {
       width: `${percentWidth.value}%`,
     };
   });
-  useEffect(() => {
-    (async () => {
-      try {
-        const items = await AsyncStorage.getItem(`items-${route.params.id}`);
-        setLoading(false);
-        if (items) {
-          setData(JSON.parse(items));
-        }
-      } catch (e) {
-        console.log(e);
-      }
-    })();
-  }, []);
+
+  const [data, setData, loading] = useGetItems(
+    route.params.id,
+    shared,
+    shareKey,
+  );
 
   useEffect(() => {
     if (loading) return;
@@ -67,10 +62,7 @@ const List = ({route, navigation}) => {
 
   async function handleDelete(id) {
     const newArr = data.filter(filterItem => filterItem.id !== id);
-    await AsyncStorage.setItem(
-      `items-${route.params.id}`,
-      JSON.stringify(newArr),
-    );
+    await updateItem(route.params.id, newArr, shared, shareKey);
     setData(prev => prev.filter(item => item.id !== id));
   }
 
@@ -78,10 +70,7 @@ const List = ({route, navigation}) => {
     const index = data.findIndex(findItem => findItem.id == id);
     const newData = data.slice();
     newData[index].checked = !newData[index].checked;
-    await AsyncStorage.setItem(
-      `items-${route.params.id}`,
-      JSON.stringify(newData),
-    );
+    await updateItem(route.params.id, newData, shared, shareKey);
     setData(newData);
   }
 
@@ -124,10 +113,7 @@ const List = ({route, navigation}) => {
 
   async function handleAddItem(item) {
     flatListRef.current.scrollToOffset({animated: true, offset: 0});
-    await AsyncStorage.setItem(
-      `items-${route.params.id}`,
-      JSON.stringify([item, ...data]),
-    );
+    await addItem(route.params.id, item, data, shared, shareKey);
     setData(prev => [item, ...prev]);
   }
 
