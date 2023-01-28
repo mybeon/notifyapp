@@ -18,6 +18,7 @@ import com.dieam.reactnativepushnotification.ReactNativePushNotificationPackage;
 import com.lugg.ReactNativeConfig.ReactNativeConfigPackage;
 import io.invertase.firebase.app.ReactNativeFirebaseAppPackage;
 import io.invertase.firebase.firestore.ReactNativeFirebaseFirestorePackage;
+import io.invertase.firebase.functions.ReactNativeFirebaseFunctionsPackage;
 
 
 public class MainApplication extends Application implements ReactApplication {
