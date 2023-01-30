@@ -1,6 +1,6 @@
 import {useState, useEffect} from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import axios from 'axios';
+import {axiosFunctions} from '../..';
 
 const useGetItems = (id, shared, shareKey) => {
   const [data, setData] = useState([]);
@@ -27,10 +27,9 @@ const useGetItems = (id, shared, shareKey) => {
   }
 
   async function getSharedItems() {
-    const result = await axios.get(
-      'http://10.0.2.2:5001/notify-grocery-list/us-central1/items',
-      {params: {id: id, shareKey: shareKey}},
-    );
+    const result = await axiosFunctions.get('/items', {
+      params: {id: id, shareKey: shareKey},
+    });
     setLoading(false);
     setData(result.data.data);
   }

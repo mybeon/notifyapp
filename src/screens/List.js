@@ -5,8 +5,9 @@ import {
   Keyboard,
   TouchableOpacity,
   ActivityIndicator,
+  Modal,
 } from 'react-native';
-import React, {useRef, useEffect, useContext} from 'react';
+import React, {useRef, useEffect, useContext, useState} from 'react';
 import {COLORS} from '../utils/constants';
 import Header from '../components/Header';
 import Item from '../components/Item';
@@ -22,12 +23,14 @@ import open from 'react-native-open-maps';
 import {addItem, updateItem} from '../functions/items';
 import useGetItems from '../hooks/useGetItems';
 import {AppContext} from '../utils/context';
+import QRcodeGenerator from '../components/QRcodeGenerator';
 
 const List = ({route, navigation}) => {
   const {state} = useContext(AppContext);
   const shareKey = state.lists.find(el => el.id === route.params.id).shareKey;
   const position = route.params.position;
   const shared = route.params.shared;
+  const [openModal, setOpenModal] = useState(false);
   const flatListRef = useRef(null);
   const percentWidth = useSharedValue(0);
   const percentStyle = useAnimatedStyle(() => {
@@ -41,6 +44,14 @@ const List = ({route, navigation}) => {
     shared,
     shareKey,
   );
+
+  function handleOpenModal() {
+    setOpenModal(true);
+  }
+
+  function handleCloseModal() {
+    setOpenModal(false);
+  }
 
   useEffect(() => {
     if (loading) return;
@@ -83,7 +94,12 @@ const List = ({route, navigation}) => {
   function headerComponent() {
     return (
       <>
-        <Header name={route.params.name} navigation={navigation} />
+        <Header
+          name={route.params.name}
+          navigation={navigation}
+          shared={shared}
+          onOpen={handleOpenModal}
+        />
         <View style={style.progressContainer}>
           <View style={style.progressOuter}>
             <Animated.View
@@ -131,6 +147,15 @@ const List = ({route, navigation}) => {
 
   return (
     <>
+      {shared && (
+        <Modal visible={openModal} animationType="fade" transparent={true}>
+          <QRcodeGenerator
+            id={route.params.id}
+            shareKey={shareKey}
+            onClose={handleCloseModal}
+          />
+        </Modal>
+      )}
       <View style={style.container}>
         <FlatList
           ref={flatListRef}

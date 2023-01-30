@@ -14,6 +14,7 @@ import Calendar from '../../../assets/svg/calendar-1.svg';
 import Field from '../../components/Field';
 import {AppContext} from '../../utils/context';
 import axios from 'axios';
+import {axiosFunctions} from '../../..';
 import SearchItem from '../../components/SearchItem';
 import Loader from '../../components/Loader';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -80,10 +81,7 @@ const CreateList = ({navigation, route, type}) => {
             newList.adminKey = uuid.v4();
             newList.shareKey = uuid.v4();
             newList.createdAt = new Date().toString();
-            await axios.post(
-              'http://10.0.2.2:5001/notify-grocery-list/us-central1/lists',
-              newList,
-            );
+            await axiosFunctions.post('/lists', newList);
             dispatch({type: 'updateSharedLists', data: newList});
             delete newList.date;
             delete newList.locationName;

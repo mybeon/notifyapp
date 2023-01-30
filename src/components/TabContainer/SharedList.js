@@ -4,7 +4,7 @@ import firestore from '@react-native-firebase/firestore';
 import {RefreshControl} from 'react-native';
 import {AppContext} from '../../utils/context';
 import {COLORS} from '../../utils/constants';
-import axios from 'axios';
+import {axiosFunctions} from '../../..';
 
 const SharedList = props => {
   const {state, dispatch} = useContext(AppContext);
@@ -47,10 +47,9 @@ const SharedList = props => {
 
   async function onDelete(item) {
     const listRef = state.lists.find(el => el.id === item.id);
-    await axios.delete(
-      'http://10.0.2.2:5001/notify-grocery-list/us-central1/lists',
-      {data: {id: listRef.id, reqAdminKey: listRef.adminKey}},
-    );
+    await axiosFunctions.delete('/lists', {
+      data: {id: listRef.id, reqAdminKey: listRef.adminKey},
+    });
     const newSharedList = state.sharedLists.filter(list => list.id !== item.id);
     dispatch({type: 'setSharedLists', data: newSharedList});
   }

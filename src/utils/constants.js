@@ -1,10 +1,10 @@
-const FONTS = {
+export const FONTS = {
   regular: 'Ubuntu-Regular',
   medium: 'Ubuntu-Medium',
   bold: 'Ubuntu-Bold',
 };
 
-const COLORS = {
+export const COLORS = {
   mainText: '#4E4E4E',
   mainColor: '#ABBFF5',
   lightColor: '#FAFAFA',
@@ -13,7 +13,7 @@ const COLORS = {
   danger: '#FF5555',
 };
 
-const TYPO = {
+export const TYPO = {
   medium: {
     fontFamily: 'Ubuntu-Medium',
     fontSize: 18,
@@ -28,4 +28,7 @@ const TYPO = {
   },
 };
 
-export {FONTS, COLORS, TYPO};
+export const URLS = {
+  dev: 'http://10.0.2.2:5001/notify-grocery-list/us-central1',
+  prod: 'http://10.0.2.2:5001/notify-grocery-list/us-central1',
+};
