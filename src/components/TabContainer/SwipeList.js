@@ -44,14 +44,14 @@ const SwipeList = props => {
             await Promise.all([
               AsyncStorage.removeItem(`items-${item.id}`),
               AsyncStorage.setItem('lists', JSON.stringify(newArr)),
-              props.deleteShared(item),
+              item.shared ? props.deleteShared(item) : null,
             ]);
             if (item.date) {
               cancelNotification(item.notificationId);
             }
             dispatch({type: 'setLists', data: newArr});
           } catch (e) {
-            console.log(e);
+            console.log('delete error', e);
           }
         },
       },

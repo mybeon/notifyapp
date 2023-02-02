@@ -5,23 +5,17 @@ import {COLORS, FONTS} from '../utils/constants';
 import trimText from '../functions/trimText';
 import QRcode from '../../assets/svg/QRcode';
 
-const Header = ({name, navigation, shared, onOpen}) => {
+const Header = ({name, navigation, shared = false, onOpen}) => {
   return (
     <View style={style.container}>
-      <View style={style.leftContainer}>
-        <TouchableOpacity
-          style={{
-            transform: [{translateY: 1}],
-            paddingVertical: 8,
-            paddingRight: 18,
-          }}
-          onPress={() => navigation.navigate('Home')}>
-          <BackBtn />
-        </TouchableOpacity>
-        <Text style={style.text}>{trimText(name, 18)}</Text>
-      </View>
+      <TouchableOpacity
+        style={style.backBtn}
+        onPress={() => navigation.navigate('Home')}>
+        <BackBtn />
+      </TouchableOpacity>
+      <Text style={style.text}>{trimText(name, 17)}</Text>
       {shared && (
-        <TouchableOpacity onPress={onOpen}>
+        <TouchableOpacity onPress={onOpen} style={style.qrBtn}>
           <QRcode />
         </TouchableOpacity>
       )}
@@ -34,17 +28,16 @@ const style = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     marginTop: 22,
-    justifyContent: 'space-between',
-  },
-  leftContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
   },
   text: {
     fontFamily: FONTS.medium,
     fontSize: 28,
     color: COLORS.mainText,
     textTransform: 'capitalize',
+  },
+  backBtn: {transform: [{translateY: 1}], paddingVertical: 8, paddingRight: 18},
+  qrBtn: {
+    marginLeft: 22,
   },
 });
 

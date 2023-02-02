@@ -30,5 +30,5 @@ export const TYPO = {
 
 export const URLS = {
   dev: 'http://10.0.2.2:5001/notify-grocery-list/us-central1',
-  prod: 'http://10.0.2.2:5001/notify-grocery-list/us-central1',
+  prod: 'https://us-central1-notify-grocery-list.cloudfunctions.net',
 };

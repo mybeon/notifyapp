@@ -89,7 +89,7 @@ const index = props => {
       {tab === 'local' ? (
         <LocalList data={state.lists} navigation={props.navigation} />
       ) : (
-        <SharedList data={state.lists} navigation={props.navigation} />
+        <SharedList navigation={props.navigation} />
       )}
     </View>
   );

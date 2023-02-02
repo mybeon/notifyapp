@@ -1,11 +1,21 @@
 import React, {useContext, useEffect} from 'react';
-import {View, Text, Dimensions, StyleSheet} from 'react-native';
+import {
+  View,
+  Text,
+  Dimensions,
+  StyleSheet,
+  TouchableOpacity,
+} from 'react-native';
 import {FONTS, COLORS} from '../utils/constants';
 import TopIcon from '../../assets/svg/mainIcon.svg';
-import {managePermission} from '../functions/requestPermission';
+import {
+  cameraPermission,
+  managePermission,
+} from '../functions/requestPermission';
 import {AppContext} from '../utils/context';
 import AddListBtn from '../components/AddListBtn';
 import TabContainer from '../components/TabContainer';
+import Camera from '../../assets/svg/Camera';
 
 const {height} = Dimensions.get('window');
 
@@ -25,6 +35,14 @@ const Home = ({navigation}) => {
       });
   }, []);
 
+  async function onCameraPress() {
+    cameraPermission().then(res => {
+      if (res) {
+        navigation.navigate('QRscanner');
+      }
+    });
+  }
+
   return (
     <View style={style.container}>
       <View style={style.upperSection}>
@@ -32,6 +50,9 @@ const Home = ({navigation}) => {
           <TopIcon />
           <Text style={style.upperText}>Lists</Text>
         </View>
+        <TouchableOpacity onPress={onCameraPress}>
+          <Camera />
+        </TouchableOpacity>
       </View>
       <TabContainer navigation={navigation} />
       <AddListBtn navigation={navigation} />
@@ -51,6 +72,7 @@ const style = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     marginBottom: 20,
+    alignItems: 'center',
   },
   upperText: {
     fontFamily: FONTS.medium,

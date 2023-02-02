@@ -1,5 +1,6 @@
 import {request, check, PERMISSIONS} from 'react-native-permissions';
 import getLocation from './getLocation';
+import {Camera} from 'react-native-vision-camera';
 
 export function managePermission() {
   return new Promise(async (resolve, reject) => {
@@ -27,6 +28,31 @@ export function managePermission() {
       }
     } catch (e) {
       reject(e);
+    }
+  });
+}
+
+export function cameraPermission() {
+  return new Promise(async (res, rej) => {
+    try {
+      const checkPermission = await Camera.getCameraPermissionStatus();
+      switch (checkPermission) {
+        case 'authorized':
+          res(true);
+          break;
+        case 'denied':
+          const request = await Camera.requestCameraPermission();
+          if (request === 'authorized') {
+            res(true);
+          } else {
+            res(false);
+          }
+          break;
+        default:
+          break;
+      }
+    } catch (e) {
+      rej(e);
     }
   });
 }

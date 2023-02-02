@@ -41,6 +41,10 @@ const style = StyleSheet.create({
     position: 'absolute',
     top: 0,
     right: 0,
+    height: 42,
+    width: 98,
+    alignContent: 'center',
+    justifyContent: 'center',
   },
   createText: {
     color: COLORS.lightColor,

@@ -12,14 +12,14 @@ import getDate from '../functions/getDate';
 
 const List = ({
   name,
-  location,
+  location = '',
   index,
   id,
   navigation,
-  position,
+  position = [],
   date,
   listLength,
-  shared,
+  shared = false,
 }) => {
   const {state} = useContext(AppContext);
   const userPosition = state.currentPosition;

@@ -1,5 +1,14 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {axiosFunctions} from '../..';
+import axios from 'axios';
+import {URLS} from '../utils/constants';
+
+let url = URLS.prod;
+
+if (__DEV__) {
+  url = URLS.dev;
+}
+
+export const axiosFunctions = axios.create({baseURL: url});
 
 export const addItem = async (id, item, data, shared, shareKey) => {
   if (shared) {
@@ -21,5 +30,21 @@ export const updateItem = async (id, data, shared, shareKey) => {
     });
   } else {
     await AsyncStorage.setItem(`items-${id}`, JSON.stringify(data));
+  }
+};
+
+export const getItems = async (id, shareKey) => {
+  if (shareKey) {
+    const result = await axiosFunctions.get('/items', {
+      params: {id, shareKey},
+    });
+    return result;
+  } else {
+    const items = await AsyncStorage.getItem(`items-${id}`);
+    if (items) {
+      return JSON.parse(items);
+    } else {
+      return [];
+    }
   }
 };

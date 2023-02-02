@@ -25,8 +25,8 @@ exports.lists = functions.https.onRequest(async (req, res) => {
             .set({data: [], shareKey}),
         ]);
         res.status(200).json({status: 'success'});
-      } catch {
-        res.status(401).json({status: 'failed'});
+      } catch (e) {
+        res.status(500).json({status: 'failed', error: e});
       }
       break;
     case 'DELETE':
@@ -41,10 +41,10 @@ exports.lists = functions.https.onRequest(async (req, res) => {
           ]);
           res.status(200).json({status: 'success'});
         } else {
-          res.status(401).json({status: 'unauthorized'});
+          res.status(200).json({status: 'unauthorized'});
         }
-      } catch {
-        res.status(500).json({status: 'server error'});
+      } catch (e) {
+        res.status(500).json({status: 'server error', error: e});
       }
       break;
     default:
@@ -65,8 +65,8 @@ exports.items = functions.https.onRequest(async (req, res) => {
         } else {
           res.status(401).json({message: 'unauthorized'});
         }
-      } catch {
-        res.status(500).send('error sorry');
+      } catch (e) {
+        res.status(500).send('server error', e);
       }
       break;
     case 'POST':
@@ -83,8 +83,8 @@ exports.items = functions.https.onRequest(async (req, res) => {
         } else {
           res.status(401).json({message: 'unauthorized'});
         }
-      } catch {
-        res.status(500).send('error sorry');
+      } catch (e) {
+        res.status(500).send('server error', e);
       }
       break;
     default:

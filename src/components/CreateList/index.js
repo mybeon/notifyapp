@@ -6,6 +6,7 @@ import {
   ScrollView,
   Pressable,
   Switch,
+  ActivityIndicator,
 } from 'react-native';
 import style from './styles';
 import {COLORS, TYPO} from '../../utils/constants';
@@ -14,10 +15,9 @@ import Calendar from '../../../assets/svg/calendar-1.svg';
 import Field from '../../components/Field';
 import {AppContext} from '../../utils/context';
 import axios from 'axios';
-import {axiosFunctions} from '../../..';
+import {axiosFunctions} from '../../functions/items';
 import SearchItem from '../../components/SearchItem';
 import Loader from '../../components/Loader';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import uuid from 'react-native-uuid';
 import DatePicker from 'react-native-date-picker';
 import getDate from '../../functions/getDate';
@@ -27,6 +27,7 @@ import {
 } from '../../functions/notification';
 import {useNetInfo} from '@react-native-community/netinfo';
 import config from 'react-native-config';
+import {storeLocalList, updateLocalList} from '../../functions/localStorage';
 
 const CreateList = ({navigation, route, type}) => {
   const netinfo = useNetInfo();
@@ -82,21 +83,12 @@ const CreateList = ({navigation, route, type}) => {
             newList.shareKey = uuid.v4();
             newList.createdAt = new Date().toString();
             await axiosFunctions.post('/lists', newList);
-            dispatch({type: 'updateSharedLists', data: newList});
             delete newList.date;
             delete newList.locationName;
             delete newList.notificationId;
+            dispatch({type: 'updateSharedListsCount'});
           }
-          let lists = await AsyncStorage.getItem('lists');
-          if (!lists) {
-            await AsyncStorage.setItem('lists', JSON.stringify([newList]));
-          } else {
-            lists = JSON.parse(lists);
-            await AsyncStorage.setItem(
-              'lists',
-              JSON.stringify([newList, ...lists]),
-            );
-          }
+          await storeLocalList(newList);
           dispatch({type: 'updateLists', data: newList});
           if (newList.date) {
             scheduleNotification(
@@ -112,15 +104,7 @@ const CreateList = ({navigation, route, type}) => {
             shared,
           });
         } else {
-          const lists = await AsyncStorage.getItem('lists');
-          const newArr = JSON.parse(lists).map(item => {
-            if (item.id === route.params.id) {
-              return {id: item.id, ...newList};
-            }
-            return item;
-          });
-
-          await AsyncStorage.setItem('lists', JSON.stringify(newArr));
+          await updateLocalList(newList);
           if (newList.date && new Date(newList.date) > Date.now()) {
             cancelNotification(route.params.notificationId);
             scheduleNotification(
@@ -298,9 +282,13 @@ const CreateList = ({navigation, route, type}) => {
         disabled={createDisable}
         onPress={createList}
         style={style.createBtn}>
-        <Text style={style.createText}>
-          {type === 'create' ? 'Create' : 'Update'}
-        </Text>
+        {createDisable ? (
+          <Loader height={30} light={true} />
+        ) : (
+          <Text style={style.createText}>
+            {type === 'create' ? 'Create' : 'Update'}
+          </Text>
+        )}
       </TouchableOpacity>
     </ScrollView>
   );

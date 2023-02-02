@@ -1,5 +1,6 @@
 {
   "cSpell.words": [
+    "Barcodes",
     "beonma",
     "bloader",
     "firestore",
@@ -10,6 +11,7 @@
     "newlist",
     "postversion",
     "Pressable",
-    "Swipeable"
+    "Swipeable",
+    "Unexisting"
   ]
 }
