@@ -6,7 +6,7 @@ import {StyleSheet, Dimensions, Pressable} from 'react-native';
 const {height, width} = Dimensions.get('window');
 
 const QRcodeGenerator = props => {
-  const value = `${props.id}+${props.shareKey}`;
+  const value = `${props.data.id}+${props.data.shareKey}+${props.data.name}`;
   return (
     <Pressable style={styles.container} onPress={props.onClose}>
       <QRCode value={value} logo={Logo} size={250} />

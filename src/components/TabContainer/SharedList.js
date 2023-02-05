@@ -1,63 +1,48 @@
 import React, {useContext, useEffect, useState} from 'react';
 import SwipeList from './SwipeList';
-import firestore from '@react-native-firebase/firestore';
 import {RefreshControl} from 'react-native';
 import {AppContext} from '../../utils/context';
 import {COLORS} from '../../utils/constants';
-import {axiosFunctions} from '../../functions/items';
-import {deleteUnexistingLists} from '../../functions/localStorage';
+import {axiosFunctions} from '../../functions/storage';
+import {getLists} from '../../functions/storage';
 
 const SharedList = props => {
-  const {state} = useContext(AppContext);
-  const listIds = state.lists?.filter(item => item.shared).map(item => item.id);
-  const [data, setData] = useState(null);
+  const {state, dispatch} = useContext(AppContext);
   const [refreshing, setRefreshing] = useState(false);
   useEffect(() => {
-    onRefresh();
-  }, [state.sharedListsCount]);
+    if (state.shared === null || !state.firstLoad) {
+      dispatch({type: 'loaded'});
+      onRefresh();
+    }
+  }, []);
 
   async function onRefresh() {
-    if (listIds.length) {
-      setRefreshing(true);
-      const queries = [];
-      const lists = [];
-      const idsToDelete = [];
-      listIds.forEach(id => {
-        queries.push(firestore().collection('lists').doc(id).get());
+    setRefreshing(true);
+    const localLists = await getLists('shared');
+    if (localLists?.length) {
+      const listsIds = localLists.map(item => item.id);
+      const {
+        data: {lists, idsToDelete},
+      } = await axiosFunctions.get('/lists', {
+        params: {lists: listsIds},
       });
-      const documents = await Promise.all(queries);
-      documents.forEach(doc => {
-        if (doc.exists) {
-          lists.push(doc.data());
-        } else {
-          idsToDelete.push(doc.id);
+      console.log('ids to delete', idsToDelete);
+      lists.forEach(list => {
+        const ref = localLists.find(el => el.id === list.id);
+        if (ref) {
+          list.shareKey = ref.shareKey;
+          list.adminKey = ref?.adminKey;
         }
       });
-      setData(lists);
-      setRefreshing(false);
-      /*firestore()
-        .collection('lists')
-        .where('id', 'in', listIds)
-        .orderBy('createdAt', 'desc')
-        .get()
-        .then(query => {
-          const lists = [];
-          query.forEach(document => {
-            if (document.exists) {
-              lists.push({id: document.id, ...document.data()});
-            } else {
-              console.log('noting');
-            }
-          });
-          setData(lists);
-          setRefreshing(false);
-        });*/
-      if (idsToDelete.length) {
-        deleteUnexistingLists(idsToDelete);
-      }
+      dispatch({
+        type: 'setLists',
+        data: lists,
+        listType: 'shared',
+      });
     } else {
-      setData([]);
+      dispatch({type: 'setLists', data: [], listType: 'shared'});
     }
+    setRefreshing(false);
   }
   const refreshControl = (
     <RefreshControl
@@ -69,17 +54,15 @@ const SharedList = props => {
   );
 
   async function onDelete(item) {
-    const listRef = state.lists.find(el => el.id === item.id);
+    const listRef = state.shared.find(ref => ref.id === item.id);
     await axiosFunctions.delete('/lists', {
       data: {id: listRef.id, reqAdminKey: listRef.adminKey},
     });
-    const newSharedLists = data.filter(list => list.id !== item.id);
-    setData(newSharedLists);
   }
 
   return (
     <SwipeList
-      data={data}
+      data={state.shared}
       navigation={props.navigation}
       refreshControl={refreshControl}
       deleteShared={onDelete}

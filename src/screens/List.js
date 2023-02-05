@@ -20,16 +20,18 @@ import Animated, {
 } from 'react-native-reanimated';
 import Goto from '../../assets/svg/goto.svg';
 import open from 'react-native-open-maps';
-import {addItem, updateItem} from '../functions/items';
+import {addItem, updateItem} from '../functions/storage';
 import useGetItems from '../hooks/useGetItems';
 import {AppContext} from '../utils/context';
 import QRcodeGenerator from '../components/QRcodeGenerator';
 
 const List = ({route, navigation}) => {
   const {state} = useContext(AppContext);
-  const shareKey = state.lists.find(el => el.id === route.params.id).shareKey;
-  const position = route.params.position;
-  const shared = route.params.shared;
+  const type = route.params.shared ? 'shared' : 'local';
+  const item = state[type].find(item => item.id === route.params.id);
+  const shareKey = item.shareKey;
+  const position = item.position;
+  const shared = item.shared;
   const [openModal, setOpenModal] = useState(false);
   const flatListRef = useRef(null);
   const percentWidth = useSharedValue(0);
@@ -73,16 +75,16 @@ const List = ({route, navigation}) => {
 
   async function handleDelete(id) {
     const newArr = data.filter(filterItem => filterItem.id !== id);
-    await updateItem(route.params.id, newArr, shared, shareKey);
     setData(prev => prev.filter(item => item.id !== id));
+    await updateItem(route.params.id, newArr, shared, shareKey);
   }
 
   async function handlePress(id) {
     const index = data.findIndex(findItem => findItem.id == id);
     const newData = data.slice();
     newData[index].checked = !newData[index].checked;
-    await updateItem(route.params.id, newData, shared, shareKey);
     setData(newData);
+    await updateItem(route.params.id, newData, shared, shareKey);
   }
 
   function renderItem({item}) {
@@ -95,7 +97,7 @@ const List = ({route, navigation}) => {
     return (
       <>
         <Header
-          name={route.params.name}
+          name={item.name}
           navigation={navigation}
           shared={shared}
           onOpen={handleOpenModal}
@@ -129,8 +131,8 @@ const List = ({route, navigation}) => {
 
   async function handleAddItem(item) {
     flatListRef.current.scrollToOffset({animated: true, offset: 0});
-    await addItem(route.params.id, item, data, shared, shareKey);
     setData(prev => [item, ...prev]);
+    await addItem(route.params.id, item, data, shared, shareKey);
   }
 
   if (loading) {
@@ -150,8 +152,7 @@ const List = ({route, navigation}) => {
       {shared && (
         <Modal visible={openModal} animationType="fade" transparent={true}>
           <QRcodeGenerator
-            id={route.params.id}
-            shareKey={shareKey}
+            data={{id: route.params.id, shareKey, name: item.name}}
             onClose={handleCloseModal}
           />
         </Modal>

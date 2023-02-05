@@ -1,5 +1,5 @@
 import {useState, useEffect} from 'react';
-import {getItems} from '../functions/items';
+import {getItems} from '../functions/storage';
 
 const useGetItems = (id, shared, shareKey) => {
   const [data, setData] = useState([]);
@@ -22,8 +22,9 @@ const useGetItems = (id, shared, shareKey) => {
 
   function getSharedItems() {
     getItems(id, shareKey).then(result => {
+      console.log(result.data);
       setLoading(false);
-      setData(result.data.data);
+      setData(result.data.items);
     });
   }
 

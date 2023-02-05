@@ -1,5 +1,5 @@
 import {View} from 'react-native';
-import React, {useState, useContext, useEffect} from 'react';
+import React, {useState} from 'react';
 import {COLORS} from '../../utils/constants';
 import Animated, {
   useSharedValue,
@@ -8,17 +8,16 @@ import Animated, {
   Easing,
 } from 'react-native-reanimated';
 import styles from './styles';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import {AppContext} from '../../utils/context';
 import LocalList from './LocalList';
 import SharedList from './SharedList';
-import listCount from '../../functions/listCount';
+import useGetListsCount from '../../hooks/useGetListsCount';
+import {useNetInfo} from '@react-native-community/netinfo';
+import NoInternet from '../NoInternet';
 
 const index = props => {
-  const {state, dispatch} = useContext(AppContext);
-  const localListCount = listCount(state.lists);
-  const sharedListCount = listCount(state.lists, false);
   const [tab, setTab] = useState('local');
+  const netinfo = useNetInfo();
+  const count = useGetListsCount();
   const activeMargin = useSharedValue('0%');
   const localText = useSharedValue(COLORS.lightColor);
   const sharedText = useSharedValue(COLORS.mainText);
@@ -54,22 +53,11 @@ const index = props => {
     setTab(type);
   }
 
-  useEffect(() => {
-    AsyncStorage.getItem('lists')
-      .then(res => {
-        if (res) {
-          const data = JSON.parse(res);
-          if (data.length) {
-            dispatch({type: 'setLists', data});
-          } else {
-            dispatch({type: 'setLists', data: []});
-          }
-        } else {
-          dispatch({type: 'setLists', data: []});
-        }
-      })
-      .catch(e => console.log(e));
-  }, []);
+  const sharedComponent = netinfo.isConnected ? (
+    <SharedList navigation={props.navigation} />
+  ) : (
+    <NoInternet height={200} />
+  );
 
   return (
     <View style={styles.container}>
@@ -77,19 +65,19 @@ const index = props => {
         <Animated.Text
           onPress={handleTabPressed.bind(null, 'local')}
           style={[styles.tabText, animateLocalText]}>
-          local ({localListCount})
+          local ({count.local})
         </Animated.Text>
         <Animated.Text
           onPress={handleTabPressed.bind(null, 'shared')}
           style={[styles.tabText, animateSharedText]}>
-          shared ({sharedListCount})
+          shared ({count.shared})
         </Animated.Text>
         <Animated.View style={[styles.active, animateActive]} />
       </View>
       {tab === 'local' ? (
-        <LocalList data={state.lists} navigation={props.navigation} />
+        <LocalList navigation={props.navigation} />
       ) : (
-        <SharedList navigation={props.navigation} />
+        sharedComponent
       )}
     </View>
   );

@@ -7,8 +7,8 @@ import List from '../../components/List';
 import {AppContext} from '../../utils/context';
 import {SwipeListView} from 'react-native-swipe-list-view';
 import {COLORS} from '../../utils/constants';
-import Empty from '../Empty';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import EmptyCart from '../../../assets/svg/EmptyCart';
+import {deleteListStorage} from '../../functions/storage';
 
 const SwipeList = props => {
   const {state, dispatch} = useContext(AppContext);
@@ -38,18 +38,12 @@ const SwipeList = props => {
         text: 'YES',
         onPress: async () => {
           try {
-            const newArr = state.lists.filter(
+            const type = item.shared ? 'shared' : 'local';
+            const newArr = state[type].filter(
               itemFilter => itemFilter.id !== item.id,
             );
-            await Promise.all([
-              AsyncStorage.removeItem(`items-${item.id}`),
-              AsyncStorage.setItem('lists', JSON.stringify(newArr)),
-              item.shared ? props.deleteShared(item) : null,
-            ]);
-            if (item.date) {
-              cancelNotification(item.notificationId);
-            }
-            dispatch({type: 'setLists', data: newArr});
+            await deleteListStorage(item, newArr, type, props.deleteShared);
+            dispatch({type: 'setLists', data: newArr, listType: type});
           } catch (e) {
             console.log('delete error', e);
           }
@@ -91,7 +85,11 @@ const SwipeList = props => {
   }
 
   if (props.data && !props.data.length) {
-    return <Empty />;
+    return (
+      <View style={{marginTop: 100}}>
+        <EmptyCart />
+      </View>
+    );
   }
   return (
     <View style={styles.mainLists}>

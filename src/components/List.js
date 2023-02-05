@@ -53,7 +53,7 @@ const List = ({
     }
   };
   function listPressed() {
-    navigation.navigate('List', {name, id, position, location, shared});
+    navigation.navigate('List', {id, shared});
   }
   const distance =
     position.length > 0 && userPosition.length > 0

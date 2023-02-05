@@ -5,8 +5,9 @@ import React from 'react';
 export const AppContext = createContext();
 
 const initialState = {
-  lists: null,
-  sharedListsCount: 0,
+  local: null,
+  shared: null,
+  firstLoad: false,
   addListData: {
     name: '',
     location: '',
@@ -20,13 +21,17 @@ const initialState = {
 function ourReducer(draft, action) {
   switch (action.type) {
     case 'setLists':
-      draft.lists = action.data;
+      draft[action.listType] = action.data;
       break;
     case 'updateLists':
-      draft.lists = [action.data, ...draft.lists];
+      if (draft[action.listType] === null) {
+        draft[action.listType] = [action.data];
+      } else {
+        draft[action.listType] = [action.data, ...draft[action.listType]];
+      }
       break;
-    case 'updateSharedListsCount':
-      draft.sharedListsCount++;
+    case 'loaded':
+      draft.firstLoad = true;
       break;
     case 'dateChange':
       draft.addListData.date = action.value;

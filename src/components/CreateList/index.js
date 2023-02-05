@@ -6,7 +6,6 @@ import {
   ScrollView,
   Pressable,
   Switch,
-  ActivityIndicator,
 } from 'react-native';
 import style from './styles';
 import {COLORS, TYPO} from '../../utils/constants';
@@ -15,19 +14,14 @@ import Calendar from '../../../assets/svg/calendar-1.svg';
 import Field from '../../components/Field';
 import {AppContext} from '../../utils/context';
 import axios from 'axios';
-import {axiosFunctions} from '../../functions/items';
 import SearchItem from '../../components/SearchItem';
 import Loader from '../../components/Loader';
 import uuid from 'react-native-uuid';
 import DatePicker from 'react-native-date-picker';
 import getDate from '../../functions/getDate';
-import {
-  scheduleNotification,
-  cancelNotification,
-} from '../../functions/notification';
 import {useNetInfo} from '@react-native-community/netinfo';
 import config from 'react-native-config';
-import {storeLocalList, updateLocalList} from '../../functions/localStorage';
+import {storeList, updateLocalList} from '../../functions/storage';
 
 const CreateList = ({navigation, route, type}) => {
   const netinfo = useNetInfo();
@@ -77,43 +71,28 @@ const CreateList = ({navigation, route, type}) => {
       try {
         if (type === 'create') {
           newList.id = uuid.v4();
-          if (shared) {
-            newList.date = null;
-            newList.adminKey = uuid.v4();
-            newList.shareKey = uuid.v4();
-            newList.createdAt = new Date().toString();
-            await axiosFunctions.post('/lists', newList);
-            delete newList.date;
-            delete newList.locationName;
-            delete newList.notificationId;
-            dispatch({type: 'updateSharedListsCount'});
-          }
-          await storeLocalList(newList);
-          dispatch({type: 'updateLists', data: newList});
-          if (newList.date) {
-            scheduleNotification(
-              state.addListData.date,
-              newList.notificationId,
-              newList.name,
-            );
-          }
-          navigation.navigate('List', {
-            id: newList.id,
-            name: newList.name,
-            position: newList.position,
-            shared,
+          await storeList(
+            newList,
+            shared ? 'shared' : 'local',
+            state.addListData.date,
+          );
+          dispatch({
+            type: 'updateLists',
+            data: newList,
+            listType: shared ? 'shared' : 'local',
           });
+          navigation.navigate('List', {id: newList.id, shared});
         } else {
-          await updateLocalList(newList);
-          if (newList.date && new Date(newList.date) > Date.now()) {
-            cancelNotification(route.params.notificationId);
-            scheduleNotification(
-              state.addListData.date,
-              newList.notificationId,
-              newList.name,
-            );
-          }
-          dispatch({type: 'setLists', data: newArr});
+          const newArr = await updateLocalList(
+            newList,
+            state.addListData.date,
+            route.params.id,
+          );
+          dispatch({
+            type: 'setLists',
+            data: newArr,
+            listType: shared ? 'shared' : 'local',
+          });
           navigation.navigate('Home');
         }
       } catch (e) {

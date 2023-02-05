@@ -16,6 +16,7 @@ import {AppContext} from '../utils/context';
 import AddListBtn from '../components/AddListBtn';
 import TabContainer from '../components/TabContainer';
 import Camera from '../../assets/svg/Camera';
+import ClearStorage from '../components/ClearStorage';
 
 const {height} = Dimensions.get('window');
 
@@ -45,6 +46,7 @@ const Home = ({navigation}) => {
 
   return (
     <View style={style.container}>
+      {__DEV__ && <ClearStorage />}
       <View style={style.upperSection}>
         <View style={{flexDirection: 'row', alignItems: 'center'}}>
           <TopIcon />

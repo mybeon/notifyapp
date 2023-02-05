@@ -12,7 +12,7 @@ import BarcodeMask from 'react-native-barcode-mask';
 import {useScanBarcodes, BarcodeFormat} from 'vision-camera-code-scanner';
 import BackSvg from '../../assets/svg/back-map.svg';
 import {COLORS} from '../utils/constants';
-import {storeLocalList} from '../functions/localStorage';
+import {storeList} from '../functions/storage';
 
 const {width} = Dimensions.get('window');
 
@@ -30,15 +30,16 @@ const QRscanner = props => {
       const qrData = barcodes[0].content.data.split('+');
       const id = qrData[0];
       const shareKey = qrData[1];
+      const name = qrData[2];
       const newList = {
         id,
         shareKey,
+        name,
         shared: true,
       };
-      storeLocalList(newList)
+      storeList(newList, 'shared')
         .then(() => {
-          dispatch({type: 'updateLists', data: newList});
-          dispatch({type: 'updateSharedListsCount'});
+          dispatch({type: 'updateLists', data: newList, listType: 'shared'});
           setIsActive(false);
           props.navigation.goBack();
         })
