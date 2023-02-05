@@ -12,8 +12,13 @@ if (__DEV__) {
 
 export const axiosFunctions = axios.create({baseURL: url});
 
-export async function storeList(newList, type = 'local', notificationDate) {
-  if (type == 'shared') {
+export async function storeList(
+  newList,
+  type = 'local',
+  notificationDate,
+  fromQR = true,
+) {
+  if (type == 'shared' && fromQR) {
     newList.date = null;
     newList.adminKey = uuid.v4();
     newList.shareKey = uuid.v4();

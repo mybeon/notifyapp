@@ -37,7 +37,7 @@ const QRscanner = props => {
         name,
         shared: true,
       };
-      storeList(newList, 'shared')
+      storeList(newList, 'shared', null, false)
         .then(() => {
           dispatch({type: 'updateLists', data: newList, listType: 'shared'});
           setIsActive(false);

@@ -55,9 +55,11 @@ const SharedList = props => {
 
   async function onDelete(item) {
     const listRef = state.shared.find(ref => ref.id === item.id);
-    await axiosFunctions.delete('/lists', {
-      data: {id: listRef.id, reqAdminKey: listRef.adminKey},
-    });
+    if (item.adminKey) {
+      await axiosFunctions.delete('/lists', {
+        data: {id: listRef.id, reqAdminKey: listRef.adminKey},
+      });
+    }
   }
 
   return (
