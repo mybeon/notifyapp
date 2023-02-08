@@ -14,6 +14,7 @@ import {COLORS, TYPO} from '../utils/constants';
 import axios from 'axios';
 import Loader from '../components/Loader';
 import config from 'react-native-config';
+import {useTranslation} from 'react-i18next';
 
 const {height, width} = Dimensions.get('window');
 const Map = ({navigation, route}) => {
@@ -21,6 +22,7 @@ const Map = ({navigation, route}) => {
     state: {currentPosition},
     dispatch,
   } = useContext(AppContext);
+  const {t} = useTranslation();
   const [markerPosition, setMarkerPosition] = useState(undefined);
   const [disableBtn, setDisableBtn] = useState(false);
   function onMapPress(e) {
@@ -55,7 +57,14 @@ const Map = ({navigation, route}) => {
           navigation.goBack();
           setDisableBtn(false);
         })
-        .catch(err => console.log(err));
+        .catch(err => {
+          dispatch({
+            type: 'notification',
+            message: t('networkError'),
+            success: false,
+          });
+          console.log(err);
+        });
     }
   }
 
@@ -77,7 +86,7 @@ const Map = ({navigation, route}) => {
           <Loader height={30} />
         ) : (
           <>
-            <Text style={style.saveText}>Save</Text>
+            <Text style={style.saveText}>{t('saveLocation')}</Text>
             <SaveMap />
           </>
         )}

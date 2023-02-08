@@ -13,11 +13,13 @@ import {useScanBarcodes, BarcodeFormat} from 'vision-camera-code-scanner';
 import BackSvg from '../../assets/svg/back-map.svg';
 import {COLORS} from '../utils/constants';
 import {storeList} from '../functions/storage';
+import {useTranslation} from 'react-i18next';
 
 const {width} = Dimensions.get('window');
 
 const QRscanner = props => {
   const {dispatch} = useContext(AppContext);
+  const {t} = useTranslation();
   const [isActive, setIsActive] = useState(true);
   const [frameProcessor, barcodes] = useScanBarcodes([BarcodeFormat.QR_CODE], {
     checkInverted: true,
@@ -40,10 +42,20 @@ const QRscanner = props => {
       storeList(newList, 'shared', null, false)
         .then(() => {
           dispatch({type: 'updateLists', data: newList, listType: 'shared'});
+          dispatch({
+            type: 'notification',
+            message: `${name} ${t('added')}`,
+            success: true,
+          });
           setIsActive(false);
           props.navigation.goBack();
         })
         .catch(err => {
+          dispatch({
+            type: 'notification',
+            message: t('QRerror'),
+            success: false,
+          });
           console.log('QRscanner useEffect error', err);
         });
     }

@@ -9,9 +9,11 @@ import {SwipeListView} from 'react-native-swipe-list-view';
 import {COLORS} from '../../utils/constants';
 import EmptyCart from '../../../assets/svg/EmptyCart';
 import {deleteListStorage} from '../../functions/storage';
+import {useTranslation} from 'react-i18next';
 
 const SwipeList = props => {
   const {state, dispatch} = useContext(AppContext);
+  const {t} = useTranslation();
   const rightSwipe = props.refreshControl ? -60 : -120;
   const rightSwipeStop = props.refreshControl ? -80 : -140;
   const renderItem = ({item, index}) => {
@@ -30,12 +32,12 @@ const SwipeList = props => {
     );
   };
   function deleteList(item) {
-    Alert.alert('Delete', 'Do you really want to delete this list ?', [
+    Alert.alert(t('delete'), 'Do you really want to delete this list ?', [
       {
-        text: 'Cancel',
+        text: t('cancelDelete'),
       },
       {
-        text: 'YES',
+        text: t('confirmDelete'),
         onPress: async () => {
           try {
             const type = item.shared ? 'shared' : 'local';
@@ -45,6 +47,11 @@ const SwipeList = props => {
             await deleteListStorage(item, newArr, type, props.deleteShared);
             dispatch({type: 'setLists', data: newArr, listType: type});
           } catch (e) {
+            dispatch({
+              type: 'notification',
+              message: t('deleteError'),
+              success: false,
+            });
             console.log('delete error', e);
           }
         },

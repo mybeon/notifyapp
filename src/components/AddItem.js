@@ -13,6 +13,7 @@ import DropdownSvg from '../../assets/svg/dropdown.svg';
 import {COLORS, FONTS} from '../utils/constants';
 import UnitModal from './UnitModal';
 import uuid from 'react-native-uuid';
+import {useTranslation} from 'react-i18next';
 
 const AddItem = ({addedItem}) => {
   const [state, setState] = useImmer({
@@ -21,7 +22,7 @@ const AddItem = ({addedItem}) => {
     unitNumber: '',
     itemText: '',
   });
-
+  const {t} = useTranslation();
   function addItem() {
     if (state.itemText.trim() != '') {
       const newItem = {
@@ -64,7 +65,7 @@ const AddItem = ({addedItem}) => {
         <TextInput
           placeholderTextColor={COLORS.lightText}
           style={style.textInput}
-          placeholder="Add item"
+          placeholder={t('addItem')}
           value={state.itemText}
           onChangeText={val =>
             setState(draft => {
@@ -78,7 +79,7 @@ const AddItem = ({addedItem}) => {
           <TextInput
             placeholderTextColor={COLORS.lightText}
             style={style.textInput}
-            placeholder="Number"
+            placeholder={t('itemNumber')}
             keyboardType="number-pad"
             value={state.unitNumber}
             onChangeText={val =>
@@ -106,7 +107,7 @@ const AddItem = ({addedItem}) => {
             textTransform: 'capitalize',
             textAlign: 'center',
           }}>
-          add item
+          {t('addItem')}
         </Text>
       </TouchableOpacity>
       <Modal

@@ -1,0 +1,33 @@
+{
+  "translation": {
+    "lists": "Listes",
+    "personal": "personnel",
+    "shared": "partagée",
+    "delete": "Supprimer",
+    "deleteAsk": "Voulez-vous vraiment supprimer cette liste ?",
+    "cancelDelete": "Annuler",
+    "confirmDelete": "OUI",
+    "addItem": "Ajouter un élément",
+    "itemNumber": "Numéro",
+    "listNameLabel": "Nom",
+    "listNamePlaceholder": "Nom de la liste",
+    "listLocationLabel": "Emplacement",
+    "listLocationPlaceholder": "Choisir l'emplacement de la liste",
+    "noLocationAsk": "Vous n'avez pas trouvé d'emplacement ?",
+    "goToMap": "Aller à Map",
+    "selectListDate": "Sélectionner la date d'échéance",
+    "listCreate": "Créer",
+    "listUpdate": "Modifier",
+    "saveLocation": "Sauvegarder",
+    "locationPermissionMessage": "L'application a besoin d'accéder à votre position pour tirer pleinement parti de ses fonctionnalités. Aucune donnée ne sera collectée ni envoyée à un serveur. N'hésitez pas à refuser la demande.",
+    "locationPermissionBtn": "Je comprends",
+    "locationPermissionTitle": "Note",
+    "added": "ajoutée",
+    "QRerror": "Erreur du scanner QR",
+    "networkError": "Erreur de réseau",
+    "permissionError": "Erreur d'autorisation",
+    "deleteError": "Erreur de suppression",
+    "createListError": "Erreur de création de liste",
+    "listNameError": "Le nom de la liste n'est pas valide"
+  }
+}

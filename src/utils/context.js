@@ -8,6 +8,7 @@ const initialState = {
   local: null,
   shared: null,
   firstLoad: false,
+  notification: null,
   addListData: {
     name: '',
     location: '',
@@ -57,6 +58,12 @@ function ourReducer(draft, action) {
       break;
     case 'currentPosition':
       draft.currentPosition = action.value;
+      break;
+    case 'notification':
+      draft.notification = {success: action.success, message: action.message};
+      break;
+    case 'clearNotification':
+      draft.notification = null;
       break;
     default:
   }

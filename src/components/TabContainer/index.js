@@ -12,9 +12,11 @@ import LocalList from './LocalList';
 import SharedList from './SharedList';
 import useGetListsCount from '../../hooks/useGetListsCount';
 import {useNetInfo} from '@react-native-community/netinfo';
+import {useTranslation} from 'react-i18next';
 import NoInternet from '../NoInternet';
 
 const index = props => {
+  const {t} = useTranslation();
   const [tab, setTab] = useState('local');
   const netinfo = useNetInfo();
   const count = useGetListsCount();
@@ -65,12 +67,12 @@ const index = props => {
         <Animated.Text
           onPress={handleTabPressed.bind(null, 'local')}
           style={[styles.tabText, animateLocalText]}>
-          local ({count.local})
+          {`${t('personal')} (${count.local})`}
         </Animated.Text>
         <Animated.Text
           onPress={handleTabPressed.bind(null, 'shared')}
           style={[styles.tabText, animateSharedText]}>
-          shared ({count.shared})
+          {`${t('shared')} (${count.shared})`}
         </Animated.Text>
         <Animated.View style={[styles.active, animateActive]} />
       </View>

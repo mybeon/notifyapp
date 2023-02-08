@@ -17,10 +17,12 @@ import AddListBtn from '../components/AddListBtn';
 import TabContainer from '../components/TabContainer';
 import Camera from '../../assets/svg/Camera';
 import ClearStorage from '../components/ClearStorage';
+import {useTranslation} from 'react-i18next';
 
 const {height} = Dimensions.get('window');
 
 const Home = ({navigation}) => {
+  const {t} = useTranslation();
   const {dispatch} = useContext(AppContext);
   useEffect(() => {
     managePermission()
@@ -32,6 +34,11 @@ const Home = ({navigation}) => {
         });
       })
       .catch(e => {
+        dispatch({
+          type: 'notification',
+          message: t('permissionError'),
+          success: false,
+        });
         console.log(e);
       });
   }, []);
@@ -50,7 +57,7 @@ const Home = ({navigation}) => {
       <View style={style.upperSection}>
         <View style={{flexDirection: 'row', alignItems: 'center'}}>
           <TopIcon />
-          <Text style={style.upperText}>Lists</Text>
+          <Text style={style.upperText}>{t('lists')}</Text>
         </View>
         <TouchableOpacity onPress={onCameraPress}>
           <Camera />

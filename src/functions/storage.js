@@ -62,7 +62,7 @@ export async function updateLocalList(newList, notificationDate, itemId) {
 }
 
 export async function deleteUnexistingLists(listsToDelete) {
-  const lists = await AsyncStorage.getItem('lists');
+  const lists = await AsyncStorage.getItem('shared');
   if (lists.length) {
     const newList = JSON.parse(lists)
       .map(list => {
@@ -72,7 +72,7 @@ export async function deleteUnexistingLists(listsToDelete) {
         }
       })
       .filter(item => item);
-    await AsyncStorage.setItem('lists', JSON.stringify(newList));
+    await AsyncStorage.setItem('shared', JSON.stringify(newList));
   }
 }
 

@@ -1,0 +1,33 @@
+{
+  "translation": {
+    "lists": "Lists",
+    "personal": "personal",
+    "shared": "shared",
+    "delete": "Delete",
+    "deleteAsk": "Do you really want to delete this list ?",
+    "cancelDelete": "Cancel",
+    "confirmDelete": "YES",
+    "addItem": "Add item",
+    "itemNumber": "Number",
+    "listNameLabel": "Name",
+    "listNamePlaceholder": "List Name",
+    "listLocationLabel": "Location",
+    "listLocationPlaceholder": "Choose location",
+    "noLocationAsk": "Didn't find a location ?",
+    "goToMap": "Go to Map",
+    "selectListDate": "Select due date",
+    "listCreate": "Create",
+    "listUpdate": "Update",
+    "saveLocation": "Save",
+    "locationPermissionMessage": "The app needs access to your location in order to fully take advantage of it's features. No data will be collected or sent to any server. Feel free to decline the request.",
+    "locationPermissionBtn": "I understand",
+    "locationPermissionTitle": "Note",
+    "added": "added",
+    "QRerror": "QRscanner error",
+    "networkError": "Network error",
+    "permissionError": "Permission error",
+    "deleteError": "Delete error",
+    "createListError": "Create list error",
+    "listNameError": "List name isn't valid"
+  }
+}

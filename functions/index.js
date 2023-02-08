@@ -89,7 +89,6 @@ exports.lists = functions.https.onRequest(async (req, res) => {
               idsToDelete.push(doc.id);
             }
           });
-          console.log(lists);
           res.status(200).json({lists, idsToDelete});
         } catch (e) {
           res.status(500).json({error: e});

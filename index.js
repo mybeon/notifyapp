@@ -8,6 +8,7 @@ import {name as appName} from './app.json';
 import PushNotification from 'react-native-push-notification';
 import {LogBox} from 'react-native';
 import firestore from '@react-native-firebase/firestore';
+import './src/utils/i18n';
 
 if (__DEV__) {
   firestore().useEmulator('localhost', 8080);

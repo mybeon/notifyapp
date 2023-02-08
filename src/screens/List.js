@@ -149,7 +149,7 @@ const List = ({route, navigation}) => {
 
   return (
     <>
-      {shared && (
+      {shared && item.adminKey && (
         <Modal visible={openModal} animationType="fade" transparent={true}>
           <QRcodeGenerator
             data={{id: route.params.id, shareKey, name: item.name}}

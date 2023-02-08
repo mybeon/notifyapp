@@ -3,7 +3,7 @@ import SwipeList from './SwipeList';
 import {RefreshControl} from 'react-native';
 import {AppContext} from '../../utils/context';
 import {COLORS} from '../../utils/constants';
-import {axiosFunctions} from '../../functions/storage';
+import {axiosFunctions, deleteUnexistingLists} from '../../functions/storage';
 import {getLists} from '../../functions/storage';
 
 const SharedList = props => {
@@ -26,7 +26,6 @@ const SharedList = props => {
       } = await axiosFunctions.get('/lists', {
         params: {lists: listsIds},
       });
-      console.log('ids to delete', idsToDelete);
       lists.forEach(list => {
         const ref = localLists.find(el => el.id === list.id);
         if (ref) {
@@ -39,6 +38,9 @@ const SharedList = props => {
         data: lists,
         listType: 'shared',
       });
+      if (idsToDelete.length) {
+        deleteUnexistingLists(idsToDelete);
+      }
     } else {
       dispatch({type: 'setLists', data: [], listType: 'shared'});
     }

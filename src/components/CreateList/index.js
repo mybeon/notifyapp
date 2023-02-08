@@ -22,10 +22,12 @@ import getDate from '../../functions/getDate';
 import {useNetInfo} from '@react-native-community/netinfo';
 import config from 'react-native-config';
 import {storeList, updateLocalList} from '../../functions/storage';
+import {useTranslation} from 'react-i18next';
 
 const CreateList = ({navigation, route, type}) => {
   const netinfo = useNetInfo();
   const {state, dispatch} = useContext(AppContext);
+  const {t} = useTranslation();
   const opacity = netinfo.isConnected && state.currentPosition.length ? 1 : 0.3;
   const datePickerValue =
     type === 'create'
@@ -96,9 +98,20 @@ const CreateList = ({navigation, route, type}) => {
           navigation.navigate('Home');
         }
       } catch (e) {
+        dispatch({
+          type: 'notification',
+          message: t('createListError'),
+          success: false,
+        });
         console.log('create list error', e);
       }
       dispatch({type: 'clearList'});
+    } else {
+      dispatch({
+        type: 'notification',
+        message: t('listNameError'),
+        success: false,
+      });
     }
   };
 
@@ -125,7 +138,14 @@ const CreateList = ({navigation, route, type}) => {
           setSearchData(res.data.results);
           setLoading(false);
         })
-        .catch(err => console.log(err));
+        .catch(err => {
+          dispatch({
+            type: 'notification',
+            message: t('networkError'),
+            success: false,
+          });
+          console.log(err);
+        });
     }, 1200);
 
     return () => {
@@ -152,15 +172,15 @@ const CreateList = ({navigation, route, type}) => {
       </TouchableOpacity>
       <View style={style.formContainer}>
         <Field
-          label="Name"
-          placeholder="List Name"
+          label={t('listNameLabel')}
+          placeholder={t('listNamePlaceholder')}
           value={state.addListData.name}
           dispatchType={'nameChange'}
         />
         <View style={{opacity}}>
           <Field
-            label="Location"
-            placeholder="Choose location"
+            label={t('listLocationLabel')}
+            placeholder={t('listLocationPlaceholder')}
             margin={true}
             value={state.addListData.location}
             dispatchType={'locationChange'}
@@ -206,14 +226,14 @@ const CreateList = ({navigation, route, type}) => {
           marginTop: 10,
           opacity,
         }}>
-        <Text style={{...TYPO.smallLight}}>Didn't find a location ?</Text>
+        <Text style={{...TYPO.smallLight}}>{t('noLocationAsk')}</Text>
         <TouchableOpacity
           disabled={
             netinfo.isConnected && state.currentPosition.length ? false : true
           }
           style={style.goMapBtn}
           onPress={() => navigation.push('Map')}>
-          <Text style={style.goMapText}>Go to Map</Text>
+          <Text style={style.goMapText}>{t('goToMap')}</Text>
         </TouchableOpacity>
       </View>
       <DatePicker
@@ -241,13 +261,13 @@ const CreateList = ({navigation, route, type}) => {
         <Text style={{...TYPO.smallLight}}>
           {state.addListData.date
             ? getDate(state.addListData.date)
-            : 'Select due date'}
+            : t('selectListDate')}
         </Text>
         <Calendar />
       </TouchableOpacity>
       {type === 'create' && (
         <View style={style.sharedContainer}>
-          <Text style={style.sharedText}>shared</Text>
+          <Text style={style.sharedText}>{t('shared')}</Text>
           <Switch
             disabled={!netinfo.isConnected}
             trackColor={{true: COLORS.mainColor}}
@@ -265,7 +285,7 @@ const CreateList = ({navigation, route, type}) => {
           <Loader height={30} light={true} />
         ) : (
           <Text style={style.createText}>
-            {type === 'create' ? 'Create' : 'Update'}
+            {type === 'create' ? t('listCreate') : t('listUpdate')}
           </Text>
         )}
       </TouchableOpacity>
