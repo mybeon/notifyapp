@@ -206,6 +206,7 @@ dependencies {
     implementation project(path: ":@react-native-firebase_app")
     implementation project(':@react-native-firebase_firestore')
     implementation project(path: ":@react-native-firebase_functions")
+    implementation project(path: ":@react-native-firebase_analytics")
     implementation "com.facebook.react:react-native:+"  // From node_modules
     implementation project(':lottie-react-native')
     implementation "androidx.swiperefreshlayout:swiperefreshlayout:1.0.0"

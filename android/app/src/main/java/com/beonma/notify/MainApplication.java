@@ -19,6 +19,7 @@ import com.lugg.ReactNativeConfig.ReactNativeConfigPackage;
 import io.invertase.firebase.app.ReactNativeFirebaseAppPackage;
 import io.invertase.firebase.firestore.ReactNativeFirebaseFirestorePackage;
 import io.invertase.firebase.functions.ReactNativeFirebaseFunctionsPackage;
+import io.invertase.firebase.analytics.ReactNativeFirebaseAnalyticsPackage;
 import com.zoontek.rnlocalize.RNLocalizePackage;
 
 
