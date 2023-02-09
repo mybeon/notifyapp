@@ -32,7 +32,7 @@ const SwipeList = props => {
     );
   };
   function deleteList(item) {
-    Alert.alert(t('delete'), 'Do you really want to delete this list ?', [
+    Alert.alert(t('delete'), t('deleteAsk'), [
       {
         text: t('cancelDelete'),
       },

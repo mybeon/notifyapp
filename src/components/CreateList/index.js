@@ -113,6 +113,7 @@ const CreateList = ({navigation, route, type}) => {
         success: false,
       });
     }
+    setCreateDisable(false);
   };
 
   useEffect(() => {
@@ -250,6 +251,9 @@ const CreateList = ({navigation, route, type}) => {
         minuteInterval={10}
         minimumDate={new Date()}
         theme="light"
+        title={t('dateSelect')}
+        confirmText={t('dateConfirm')}
+        cancelText={t('dateCancel')}
       />
       <TouchableOpacity
         disabled={shared}
@@ -282,7 +286,7 @@ const CreateList = ({navigation, route, type}) => {
         onPress={createList}
         style={style.createBtn}>
         {createDisable ? (
-          <Loader height={30} light={true} />
+          <Loader height={22} light={true} />
         ) : (
           <Text style={style.createText}>
             {type === 'create' ? t('listCreate') : t('listUpdate')}

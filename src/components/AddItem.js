@@ -65,7 +65,7 @@ const AddItem = ({addedItem}) => {
         <TextInput
           placeholderTextColor={COLORS.lightText}
           style={style.textInput}
-          placeholder={t('addItem')}
+          placeholder={t('addItemPlaceholder')}
           value={state.itemText}
           onChangeText={val =>
             setState(draft => {
@@ -107,7 +107,7 @@ const AddItem = ({addedItem}) => {
             textTransform: 'capitalize',
             textAlign: 'center',
           }}>
-          {t('addItem')}
+          {t('addItemBtn')}
         </Text>
       </TouchableOpacity>
       <Modal

@@ -51,8 +51,7 @@ const Notification = () => {
 const styles = StyleSheet.create({
   container: {
     position: 'absolute',
-    height: 45,
-    width: 200,
+    padding: 12,
     borderRadius: 5,
     top: 15,
     alignSelf: 'center',
@@ -63,7 +62,7 @@ const styles = StyleSheet.create({
   },
   text: {
     ...TYPO.medium,
-    fontSize: 12,
+    fontSize: 14,
     color: COLORS.lightColor,
   },
 });

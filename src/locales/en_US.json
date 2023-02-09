@@ -7,7 +7,8 @@
     "deleteAsk": "Do you really want to delete this list ?",
     "cancelDelete": "Cancel",
     "confirmDelete": "YES",
-    "addItem": "Add item",
+    "addItemPlaceholder": "Add item",
+    "addItemBtn": "Add item",
     "itemNumber": "Number",
     "listNameLabel": "Name",
     "listNamePlaceholder": "List Name",
@@ -28,6 +29,9 @@
     "permissionError": "Permission error",
     "deleteError": "Delete error",
     "createListError": "Create list error",
-    "listNameError": "List name isn't valid"
+    "listNameError": "List name isn't valid",
+    "dateSelect": "Select Date",
+    "dateConfirm": "Confirm",
+    "dateCancel": "Cancel"
   }
 }

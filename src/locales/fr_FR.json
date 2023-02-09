@@ -7,13 +7,14 @@
     "deleteAsk": "Voulez-vous vraiment supprimer cette liste ?",
     "cancelDelete": "Annuler",
     "confirmDelete": "OUI",
-    "addItem": "Ajouter un élément",
+    "addItemPlaceholder": "Ajouter un élément",
+    "addItemBtn": "Ajouter",
     "itemNumber": "Numéro",
     "listNameLabel": "Nom",
     "listNamePlaceholder": "Nom de la liste",
     "listLocationLabel": "Emplacement",
     "listLocationPlaceholder": "Choisir l'emplacement de la liste",
-    "noLocationAsk": "Vous n'avez pas trouvé d'emplacement ?",
+    "noLocationAsk": "pas d'emplacement ?",
     "goToMap": "Aller à Map",
     "selectListDate": "Sélectionner la date d'échéance",
     "listCreate": "Créer",
@@ -28,6 +29,9 @@
     "permissionError": "Erreur d'autorisation",
     "deleteError": "Erreur de suppression",
     "createListError": "Erreur de création de liste",
-    "listNameError": "Le nom de la liste n'est pas valide"
+    "listNameError": "Le nom de la liste est invalide",
+    "dateSelect": "Sélectionnez une date",
+    "dateConfirm": "Confirmer",
+    "dateCancel": "Annuler"
   }
 }
